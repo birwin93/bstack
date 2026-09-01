@@ -1,0 +1,13 @@
+### Autopilot-full
+
+**You own the verdicts, never the PRs. One owner runs each PR from build to merge, and nothing merges without an independent clean verdict.** Use only when the operator explicitly asks for full autopilot and grants publication and merge authority for the named queue.
+
+1. **Load the runtime and record authority.** Resolve delegation, waiting, scheduling, control, and history through **bstack-runtime**. Record the exact queue and whether commit, push, PR creation, and merge are authorized. Operator-owned items stop at merge-ready. A request to explain the protocol is not permission to execute it.
+2. **Give one owner each independent PR.** Each owner gets a disjoint branch or worktree, explicit write scope, acceptance checks, the repository's PR conventions, a live verification recipe, and the **poteto-worker** contract. Owners may run concurrently within the runtime limit. Overlapping work serializes.
+3. **Require the full lifecycle.** The owner builds, tests, exercises the real artifact through a capability the runtime actually exposes, triages review findings, runs **no-comments**, rebases or restacks only when authorized and safe, and reports a merge-ready head SHA plus its decision trail.
+4. **Verify the exact head independently.** Use **swarm** to re-run gates, prove the load-bearing behavior on the real surface, and audit the diff and receipts without trusting the PR description. Missing live evidence is not a clean verdict. Findings return to the owner; every changed head gets a fresh verdict unless an unchanged patch-id is proven.
+5. **Merge only at the authorization intersection.** A clean verdict is necessary but not sufficient. Merge only when the original operator grant covers that exact PR and the repository state is still safe. Never infer deploy authority from merge authority. Operator-owned items wait for the operator.
+6. **Audit through the runtime.** Use supported scheduling or wake capabilities for periodic audits. Re-read this playbook and the recorded objective, probe active owners through runtime status, and count durable side effects and evidence as progress. Replace a genuinely stuck owner; do not mistake silence alone for failure.
+7. **Honor stop immediately.** A hold or stand-down sends every owner a zero-writes instruction and cancels future scheduled work.
+
+**Reply:** the queue with each PR's owner, state, and head SHA; each verifier verdict; what merged; operator-owned gates; and blockers.

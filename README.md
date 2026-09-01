@@ -1,0 +1,96 @@
+# bstack
+
+`bstack` is a host-neutral port of Lauren Tan's
+[`pstack`](https://github.com/cursor/plugins/tree/main/pstack) engineering
+workflows. It keeps Poteto Mode, its playbooks, principles, and review skills,
+while moving host-specific operations behind a small runtime contract.
+
+The initial source snapshot came from `cursor/plugins` commit
+`b9ddc83c32972210b8a94d389130713e8eed346e` and remains available under the
+MIT license in [LICENSE](LICENSE).
+
+## Goals
+
+- Run the same playbooks in Codex, Cursor, and other Agent Skills clients.
+- Resolve delegation and model choices from capabilities available in the
+  current host instead of hardcoded tool names or model slugs.
+- Keep repository edits separate from publication authority. Committing,
+  pushing, opening pull requests, merging, deploying, and external writes
+  require explicit authorization by default.
+- Preserve progressive disclosure. Poteto Mode loads one matched playbook and
+  only the supporting skills needed for that task.
+- Bound parallelism and review rounds through configuration.
+
+## Layout
+
+- `skills/poteto-mode` is the main entry point.
+- `skills/bstack-runtime` resolves the host adapter, configuration, model
+  roles, executor routes, and authorization policy.
+- Other folders under `skills/` are callable Agent Skills used by playbooks.
+- `bstack.example.yaml` documents optional configuration.
+- `scripts/validate_skills.py` validates the portable skill bundle.
+
+## Development
+
+Run validation from the repository root:
+
+```sh
+python3 scripts/validate_skills.py
+```
+
+## Install locally
+
+Link the bundle into any Agent Skills-compatible client by passing its skills
+directory explicitly:
+
+```sh
+./scripts/link-skills.sh ~/.agents/skills
+```
+
+For a repository-local installation, pass that repository's supported skills
+directory instead. The installer refuses to replace an existing skill with the
+same name; resolve those conflicts deliberately, then rerun it. Symlinks keep a
+development checkout current as this repository changes.
+
+After installation, ask the client to run `setup-bstack` if you want personal
+or repository model-role and fan-out configuration. No configuration is
+required for the defaults.
+
+## Route work to different CLIs
+
+The runtime supports two fixed external executors: `codex` and `claude`. A
+route selects both an executor and provider model, so a repository can use
+Codex for implementation and Claude for independent judgment:
+
+```yaml
+version: 2
+models:
+  fast-code: {executor: codex, model: gpt-5.6-luna}
+  deep-code: {executor: codex, model: gpt-5.6-sol}
+  judgment: {executor: claude, model: fable}
+  critic: {executor: claude, model: fable}
+```
+
+`auto` keeps native host inheritance. Native delegation on a matching host is
+preferred; the CLI dispatcher is the fallback when that host capability is
+unavailable. Explicit executor/model routes are never silently replaced.
+
+The dependency-free dispatcher is
+`skills/bstack-runtime/scripts/bstack_exec.py`:
+
+```sh
+python3 skills/bstack-runtime/scripts/bstack_exec.py plan \
+  --executor claude --model fable --cwd "$PWD" --access read-only
+printf '%s\n' 'Review the current diff.' | \
+  python3 skills/bstack-runtime/scripts/bstack_exec.py run \
+    --executor claude --model fable --cwd "$PWD" --access read-only
+```
+
+Use `probe --executor codex` or `probe --executor claude` to check local CLI
+availability. Prompts are sent over stdin; the dispatcher never invokes a
+shell or accepts arbitrary provider flags. `workspace-write` requires explicit
+local-write authority and an isolated worktree, and should be used only for a
+worker that owns that worktree.
+
+Host adapters describe execution mechanics; shared skills must not name a
+host-specific primitive directly.

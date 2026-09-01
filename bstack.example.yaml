@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  fast-code:
+    executor: codex
+    model: gpt-5.6-luna
+  deep-code:
+    executor: codex
+    model: gpt-5.6-sol
+  judgment:
+    executor: claude
+    model: fable
+  critic:
+    executor: claude
+    model: fable
+
+# Version 1 scalar entries remain valid and mean:
+#   role: {executor: auto, model: <scalar>}
+# `auto` inherits the native host executor and parent model.
+
+limits:
+  max-parallel: 3
+  max-review-rounds: 2
+  panel-size: 2
+
+authorization:
+  commit: explicit
+  push: explicit
+  open-pr: explicit
+  merge: explicit
+  deploy: explicit
+  external-writes: explicit
