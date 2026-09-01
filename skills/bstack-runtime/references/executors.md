@@ -1,26 +1,74 @@
 # CLI executors
 
-`bstack_exec.py` is the fallback process boundary for hosts that cannot
-delegate natively. It has a fixed registry: `codex` and `claude`. It accepts a
-resolved role route, sends the prompt on standard input, and prints one bounded
-JSON result. It does not parse bstack YAML.
+Explicit executor routes run provider CLIs directly. `executor: codex` runs
+`codex exec`. `executor: claude` runs `claude -p`. Native host delegation is
+reserved for `executor: auto`.
 
-Use `plan` to inspect the exact argv without running a model, `probe` to check
-whether a binary is available, and `run` to execute a prompt:
+The host owns the process lifecycle. Start the fixed command, send the prompt
+over stdin, wait until the process exits, and cancel only when the parent task
+or user cancels the worker. Never impose a wall-clock deadline on an LLM call.
+A host tool's yield or polling interval only controls progress delivery.
+
+## Codex
+
+Run a read-only worker with this argument template:
 
 ```sh
-python3 skills/bstack-runtime/scripts/bstack_exec.py plan \
-  --executor codex --model gpt-5.6-luna --cwd /repo --access read-only
+codex exec \
+  --ephemeral \
+  --sandbox read-only \
+  -C /absolute/repository/path \
+  --json \
+  --model gpt-5.6-sol \
+  -
 ```
 
-Read-only routes use Codex's ephemeral read-only sandbox or Claude's restricted
-plan mode with strict MCP configuration. Claude keeps `--restricted` and
-`--strict-mcp-config` for workspace-write too, changing only to
-`--permission-mode acceptEdits`. Codex workspace-write uses its corresponding
-sandbox mode. Workspace-write requires explicit local-write authority and an
-isolated worktree. Do not pass provider bypass, approval, or arbitrary flag
-options.
+For an authorized writer, change the sandbox to `workspace-write` and set `-C`
+to the worker's isolated worktree. Omit `--model` when the route's model is
+`auto`. Do not pass approval-bypass flags.
 
-The normalized result includes status, exit code, final text, bounded provider
-metadata, bounded stderr, output-cap indicators, and a structured error when
-needed. It never includes the prompt or process environment.
+Codex emits JSONL. Use the final completed agent message as the worker result.
+Treat a nonzero exit or a missing final agent message as a failed route.
+
+## Claude
+
+Run a read-only worker from the repository directory with this argument
+template:
+
+```sh
+claude -p \
+  --restricted \
+  --strict-mcp-config \
+  --permission-mode plan \
+  --output-format json \
+  --no-session-persistence \
+  --model fable
+```
+
+For an authorized writer, run from the worker's isolated worktree and change
+the permission mode to `acceptEdits`. Keep `--restricted` and
+`--strict-mcp-config`. Omit `--model` when the route's model is `auto`. Do not
+pass permission-bypass flags.
+
+Claude emits one JSON object. Use its top-level `result` text as the worker
+result. Treat a nonzero exit or a missing `result` as a failed route.
+
+## Prompt and process handling
+
+Pass the prompt separately from the command. Use an argv-capable process API
+when the host exposes one. If the host only accepts a command string, quote the
+fixed model and path values for that shell. Never interpolate the prompt into
+the command. Send the prompt through stdin and close stdin after the final
+byte.
+
+Retain the process or session identifier when the host yields. Continue waiting
+on that identifier until the process exits. On cancellation, ask the host to
+stop the process and its children. Do not add a provider timeout, shell timeout,
+or host execution deadline.
+
+Use `codex --version` or `claude --version` when a short binary availability
+check is useful. A timeout on that local check does not authorize a timeout on
+the later LLM call.
+
+Every CLI process counts against both bstack's `max-parallel` limit and any
+lower host concurrency limit.

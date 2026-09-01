@@ -49,13 +49,14 @@ models:
 
 The version 1 scalar form remains valid and normalizes to
 `{executor: auto, model: <scalar>}`. `auto` preserves native host inheritance.
-Use native matching-host delegation when available; the CLI dispatcher is a
-fallback. Never silently substitute a different explicit executor or model.
+An explicit `codex` route always runs `codex exec`. An explicit `claude` route
+always runs `claude -p`. Never silently substitute a different explicit
+executor or model.
 
-The supported CLI boundary is intentionally fixed. Do not write arbitrary
-commands or provider flags into configuration. Read-only execution is the
-default; workspace-write execution requires explicit local-write authority and
-an isolated worktree.
+The supported CLI commands are fixed. Do not write arbitrary commands or
+provider flags into configuration. Read-only execution is the default.
+Workspace-write execution requires explicit local-write authority and an
+isolated worktree.
 
 When a configured model is no longer available, propose `auto` or a confirmed
 replacement. A panel's size, not repeated model names, controls its fan-out.

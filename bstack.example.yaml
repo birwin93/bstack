@@ -16,7 +16,7 @@ models:
 
 # Version 1 scalar entries remain valid and mean:
 #   role: {executor: auto, model: <scalar>}
-# `auto` inherits the native host executor and parent model.
+# `auto` uses native host delegation. Explicit executors run their named CLI.
 
 limits:
   max-parallel: 3

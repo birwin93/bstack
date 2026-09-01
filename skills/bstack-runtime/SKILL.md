@@ -40,22 +40,28 @@ models:
     model: gpt-5.6-sol
 ```
 
-Normalize a scalar as `{executor: auto, model: <scalar>}`. `auto` means native
-host inheritance. Only the fixed executors `codex` and `claude` may be named;
-configuration must not become an arbitrary shell command or provider-flag
-escape hatch.
+Normalize a scalar as `{executor: auto, model: <scalar>}`. Executor values have
+literal meanings:
 
-Prefer native delegation when the current host matches the requested executor
-and supports the requested model. Otherwise use the dependency-free
-`scripts/bstack_exec.py` fallback with the resolved route. Never silently
-replace an explicit executor or model with another one; report an unavailable
-route as a bounded error.
+- `auto` uses native host delegation and inherits the parent model when the
+  route omits a model.
+- `codex` runs the configured model through `codex exec`.
+- `claude` runs the configured model through `claude -p`.
 
-The fallback supports `plan`, `probe`, and `run`. Prompts travel over stdin,
-and the result is one bounded JSON object. Read-only mode is the default.
-`workspace-write` requires explicit local-write authority and an isolated
-worktree owned by the worker. Do not use approval-bypass flags, arbitrary
-provider flags, or a shell.
+Configuration must not become an arbitrary command or provider-flag escape
+hatch. Never silently replace an explicit executor or model with another one.
+If the host cannot run an explicit CLI route, report that route as unavailable.
+
+Read [references/executors.md](references/executors.md) before starting an
+explicit CLI route. Start the fixed command through the host's process
+capability, send the prompt over stdin, and let the host own waiting and
+cancellation. Never impose a wall-clock deadline on an LLM call. A tool yield
+or progress polling interval must not terminate the CLI process.
+
+Read-only mode is the default. `workspace-write` requires explicit local-write
+authority and an isolated worktree owned by the worker. Do not use approval-
+bypass flags or arbitrary provider flags. Every CLI worker counts against both
+bstack's `max-parallel` limit and any lower host limit.
 
 ## Resolve the host
 
@@ -89,13 +95,13 @@ bstack uses semantic roles rather than provider model slugs:
 - `judgment` for architecture, synthesis, and ambiguous decisions.
 - `critic` for independent review.
 
-For scalar routes and native delegation, map a configured role only to a model
-that the active host confirms is available. For an explicit cross-CLI route,
-confirm the model through that route's executor (for example with `probe` and
-then a bounded `run`); the active host's catalog does not need to contain a
-model owned by another CLI. `auto` and an absent mapping inherit the parent
-model. Never guess a model slug. Panel size determines reviewer count; repeated
-roles still count toward limits.
+For `auto` routes, map a configured role only to a model that the active host
+confirms is available. For explicit CLI routes, use the provider model from
+configuration. The active host's model catalog does not need to contain a
+model owned by another CLI. Omit the model flag when the configured model is
+`auto`. If the CLI rejects a configured model, report the error without
+substitution. Never guess a model slug. Panel size determines reviewer count;
+repeated roles still count toward limits.
 
 ## Authorization
 

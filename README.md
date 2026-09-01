@@ -56,11 +56,12 @@ After installation, ask the client to run `setup-bstack` if you want personal
 or repository model-role and fan-out configuration. No configuration is
 required for the defaults.
 
-## Route work to different CLIs
+## Route work to native agents or CLIs
 
-The runtime supports two fixed external executors: `codex` and `claude`. A
-route selects both an executor and provider model, so a repository can use
-Codex for implementation and Claude for independent judgment:
+The executor value selects the execution path. `auto` uses native host
+delegation. `codex` runs `codex exec`, and `claude` runs `claude -p`. A route
+also selects the provider model, so a repository can use Codex for
+implementation and Claude for independent judgment:
 
 ```yaml
 version: 2
@@ -71,26 +72,41 @@ models:
   critic: {executor: claude, model: fable}
 ```
 
-`auto` keeps native host inheritance. Native delegation on a matching host is
-preferred; the CLI dispatcher is the fallback when that host capability is
-unavailable. Explicit executor/model routes are never silently replaced.
+Version 1 scalar entries normalize to `{executor: auto, model: <scalar>}`.
+Explicit executors always run their named CLI. The runtime never silently
+replaces an explicit executor or model.
 
-The dependency-free dispatcher is
-`skills/bstack-runtime/scripts/bstack_exec.py`:
+Codex read-only routes use this command shape:
 
 ```sh
-python3 skills/bstack-runtime/scripts/bstack_exec.py plan \
-  --executor claude --model fable --cwd "$PWD" --access read-only
-printf '%s\n' 'Review the current diff.' | \
-  python3 skills/bstack-runtime/scripts/bstack_exec.py run \
-    --executor claude --model fable --cwd "$PWD" --access read-only
+codex exec \
+  --ephemeral \
+  --sandbox read-only \
+  -C "$PWD" \
+  --json \
+  --model gpt-5.6-sol \
+  -
 ```
 
-Use `probe --executor codex` or `probe --executor claude` to check local CLI
-availability. Prompts are sent over stdin; the dispatcher never invokes a
-shell or accepts arbitrary provider flags. `workspace-write` requires explicit
-local-write authority and an isolated worktree, and should be used only for a
-worker that owns that worktree.
+Claude read-only routes use this command shape:
+
+```sh
+claude -p \
+  --restricted \
+  --strict-mcp-config \
+  --permission-mode plan \
+  --output-format json \
+  --no-session-persistence \
+  --model fable
+```
+
+The host sends prompts over stdin and owns waiting and cancellation. LLM calls
+have no wall-clock deadline. A terminal yield or polling interval only controls
+progress delivery. It must not terminate the process.
+
+`workspace-write` requires explicit local-write authority and an isolated
+worktree owned by the worker. CLI processes count against both bstack's
+`max-parallel` limit and any lower host limit.
 
 Host adapters describe execution mechanics; shared skills must not name a
 host-specific primitive directly.

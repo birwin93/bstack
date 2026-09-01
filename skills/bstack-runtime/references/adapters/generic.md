@@ -1,9 +1,14 @@
 # Generic Agent Skills adapter
 
-Use only capabilities described by the current client. If the client exposes no
-subagents, run the playbook serially. If it exposes no scheduler, use bounded
-waiting or hand back the unmet predicate. If it exposes no history API or
-connected tools, state that limitation in the result.
+Use native delegation only for `auto` routes. For explicit `codex` and `claude`
+routes, read [../executors.md](../executors.md). The client must expose a
+process capability that can send stdin, wait without terminating the process,
+and cancel on request. Otherwise report the explicit route as unavailable.
+
+Use only capabilities described by the current client. If the client exposes
+no subagents, run an `auto` route serially. If it exposes no scheduler, use
+bounded waiting or hand back the unmet predicate. If it exposes no history API
+or connected tools, state that limitation in the result.
 
 Inherit the parent model unless the client provides an enumerable model catalog
 and accepts model overrides for delegated work.

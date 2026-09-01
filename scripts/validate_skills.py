@@ -28,6 +28,9 @@ FORBIDDEN = {
     "hardcoded Claude model": re.compile(r"claude-(?:fable|opus)"),
     "hardcoded OpenAI model": re.compile(r"gpt-5\.6-sol-max"),
 }
+REMOVED_RUNTIME = {
+    "removed bstack executor wrapper": re.compile(r"\bbstack_exec(?:\.py)?\b"),
+}
 
 
 def frontmatter(path: Path) -> tuple[dict[str, str], list[str]]:
@@ -101,6 +104,10 @@ def main() -> int:
         ):
             for error in validate_portability(path):
                 failures.append(f"{path.relative_to(ROOT)}: {error}")
+            text = path.read_text(encoding="utf-8", errors="replace")
+            for label, pattern in REMOVED_RUNTIME.items():
+                if pattern.search(text):
+                    failures.append(f"{path.relative_to(ROOT)}: {label}")
 
     if failures:
         print("bstack validation failed:")
