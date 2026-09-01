@@ -116,21 +116,21 @@ class ProcessRunner:
         assert process.stdin is not None
         assert process.stdout is not None
         assert process.stderr is not None
-        try:
-            process.stdin.write(stdin)
-        except BrokenPipeError:
-            pass
-        finally:
-            process.stdin.close()
-
+        deadline = time.monotonic() + timeout
         selector = selectors.DefaultSelector()
         selector.register(process.stdout, selectors.EVENT_READ, "stdout")
         selector.register(process.stderr, selectors.EVENT_READ, "stderr")
+        stdin_view = memoryview(stdin)
+        stdin_offset = 0
+        if stdin_view:
+            os.set_blocking(process.stdin.fileno(), False)
+            selector.register(process.stdin, selectors.EVENT_WRITE, "stdin")
+        else:
+            process.stdin.close()
         stdout = bytearray()
         stderr = bytearray()
         stdout_truncated = False
         stderr_truncated = False
-        deadline = time.monotonic() + timeout
         timed_out = False
 
         try:
@@ -142,6 +142,22 @@ class ProcessRunner:
                     remaining = 0.5
                 events = selector.select(min(max(remaining, 0.0), 0.25))
                 for key, _ in events:
+                    if key.data == "stdin":
+                        try:
+                            written = os.write(
+                                key.fileobj.fileno(),
+                                stdin_view[stdin_offset : stdin_offset + 65_536],
+                            )
+                        except BlockingIOError:
+                            continue
+                        except BrokenPipeError:
+                            stdin_offset = len(stdin_view)
+                        else:
+                            stdin_offset += written
+                        if stdin_offset >= len(stdin_view):
+                            selector.unregister(key.fileobj)
+                            key.fileobj.close()
+                        continue
                     chunk = os.read(key.fileobj.fileno(), 65_536)
                     if not chunk:
                         selector.unregister(key.fileobj)
@@ -157,6 +173,8 @@ class ProcessRunner:
                     break
         finally:
             selector.close()
+            if not process.stdin.closed:
+                process.stdin.close()
             if process.poll() is None:
                 self._kill_group(process)
             try:

@@ -142,6 +142,21 @@ class DispatcherTests(unittest.TestCase):
         self.assertEqual(result["status"], "timed_out")
         self.assertEqual(result["error"]["code"], "timeout")
 
+    def test_real_runner_times_out_while_child_ignores_large_prompt(self):
+        script = Path(self.path) / "codex"
+        script.write_text("#!/bin/sh\nsleep 0.5\nprintf '%s' '{\"type\":\"item.completed\",\"item\":{\"type\":\"agent_message\",\"text\":\"too late\"}}'\n")
+        script.chmod(script.stat().st_mode | stat.S_IXUSR)
+        old_path = os.environ.get("PATH", "")
+        os.environ["PATH"] = f"{self.path}:{old_path}"
+        started = time.monotonic()
+        try:
+            result = bstack_exec.dispatch(executor="codex", model="auto", cwd=self.path, access="read-only", prompt="x" * 2_000_000, timeout=0.05)
+        finally:
+            os.environ["PATH"] = old_path
+        self.assertLess(time.monotonic() - started, 1)
+        self.assertEqual(result["status"], "timed_out")
+        self.assertEqual(result["error"]["code"], "timeout")
+
     def test_real_runner_caps_provider_output(self):
         script = Path(self.path) / "codex"
         script.write_text("#!/bin/sh\nprintf '%s' '{\"type\":\"item.completed\",\"item\":{\"type\":\"agent_message\",\"text\":\"xxxxxxxxxxxxxxxx\"}}'\nprintf '%s' 'yyyyyyyyyyyy' >&2\n")
