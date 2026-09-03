@@ -20,12 +20,15 @@ codex exec \
   -C /absolute/repository/path \
   --json \
   --model gpt-5.6-sol \
+  --config 'model_reasoning_effort="high"' \
   -
 ```
 
 For an authorized writer, change the sandbox to `workspace-write` and set `-C`
 to the worker's isolated worktree. Omit `--model` when the route's model is
-`auto`. Do not pass approval-bypass flags.
+`auto`. When `reasoning` is explicit, pass it as the fixed
+`model_reasoning_effort` config override shown above; omit that override when
+`reasoning` is omitted or `auto`. Do not pass approval-bypass flags.
 
 Codex emits JSONL. Use the final completed agent message as the worker result.
 Treat a nonzero exit or a missing final agent message as a failed route.
@@ -42,13 +45,15 @@ claude -p \
   --permission-mode plan \
   --output-format json \
   --no-session-persistence \
-  --model fable
+  --model fable \
+  --effort high
 ```
 
 For an authorized writer, run from the worker's isolated worktree and change
 the permission mode to `acceptEdits`. Keep `--restricted` and
 `--strict-mcp-config`. Omit `--model` when the route's model is `auto`. Do not
-pass permission-bypass flags.
+pass `--effort` when `reasoning` is omitted or `auto`. Do not pass
+permission-bypass flags.
 
 Claude emits one JSON object. Use its top-level `result` text as the worker
 result. Treat a nonzero exit or a missing `result` as a failed route.
@@ -57,9 +62,9 @@ result. Treat a nonzero exit or a missing `result` as a failed route.
 
 Pass the prompt separately from the command. Use an argv-capable process API
 when the host exposes one. If the host only accepts a command string, quote the
-fixed model and path values for that shell. Never interpolate the prompt into
-the command. Send the prompt through stdin and close stdin after the final
-byte.
+fixed model, reasoning, and path values for that shell. Never interpolate the
+prompt into the command. Send the prompt through stdin and close stdin after
+the final byte.
 
 Retain the process or session identifier when the host yields. Continue waiting
 on that identifier until the process exits. On cancellation, ask the host to

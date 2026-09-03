@@ -10,5 +10,7 @@ no subagents, run an `auto` route serially. If it exposes no scheduler, use
 bounded waiting or hand back the unmet predicate. If it exposes no history API
 or connected tools, state that limitation in the result.
 
-Inherit the parent model unless the client provides an enumerable model catalog
-and accepts model overrides for delegated work.
+Inherit the parent model and reasoning level unless the client provides an
+enumerable catalog and accepts those overrides for delegated work. If a route
+requests an explicit reasoning level that native delegation cannot apply,
+report the route as unavailable instead of silently inheriting.

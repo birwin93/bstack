@@ -12,8 +12,8 @@ MIT license in [LICENSE](LICENSE).
 ## Goals
 
 - Run the same playbooks in Codex, Cursor, and other Agent Skills clients.
-- Resolve delegation and model choices from capabilities available in the
-  current host instead of hardcoded tool names or model slugs.
+- Resolve delegation, model, and reasoning choices from capabilities available
+  in the current host instead of hardcoded tool names or model slugs.
 - Keep repository edits separate from publication authority. Committing,
   pushing, opening pull requests, merging, deploying, and external writes
   require explicit authorization by default.
@@ -25,7 +25,7 @@ MIT license in [LICENSE](LICENSE).
 
 - `skills/poteto-mode` is the main entry point.
 - `skills/bstack-runtime` resolves the host adapter, configuration, model
-  roles, executor routes, and authorization policy.
+  roles, reasoning levels, executor routes, and authorization policy.
 - Other folders under `skills/` are callable Agent Skills used by playbooks.
 - `bstack.example.yaml` documents optional configuration.
 - `scripts/validate_skills.py` validates the portable skill bundle.
@@ -53,28 +53,30 @@ same name; resolve those conflicts deliberately, then rerun it. Symlinks keep a
 development checkout current as this repository changes.
 
 After installation, ask the client to run `setup-bstack` if you want personal
-or repository model-role and fan-out configuration. No configuration is
-required for the defaults.
+or repository model-role, reasoning, and fan-out configuration. No
+configuration is required for the defaults.
 
 ## Route work to native agents or CLIs
 
 The executor value selects the execution path. `auto` uses native host
 delegation. `codex` runs `codex exec`, and `claude` runs `claude -p`. A route
-also selects the provider model, so a repository can use Codex for
-implementation and Claude for independent judgment:
+can also select the provider model and reasoning level, so a repository can
+use Codex for implementation and Claude for independent judgment:
 
 ```yaml
 version: 2
 models:
-  fast-code: {executor: codex, model: gpt-5.6-luna}
-  deep-code: {executor: codex, model: gpt-5.6-sol}
-  judgment: {executor: claude, model: fable}
-  critic: {executor: claude, model: fable}
+  fast-code: {executor: codex, model: gpt-5.6-luna, reasoning: high}
+  deep-code: {executor: codex, model: gpt-5.6-sol, reasoning: high}
+  judgment: {executor: claude, model: fable, reasoning: high}
+  critic: {executor: claude, model: fable, reasoning: high}
 ```
 
 Version 1 scalar entries normalize to `{executor: auto, model: <scalar>}`.
 Explicit executors always run their named CLI. The runtime never silently
-replaces an explicit executor or model.
+replaces an explicit executor, model, or reasoning level. Omit `reasoning` or
+set it to `auto` to inherit the native parent session or the explicit CLI's
+provider default.
 
 Codex read-only routes use this command shape:
 
@@ -85,6 +87,7 @@ codex exec \
   -C "$PWD" \
   --json \
   --model gpt-5.6-sol \
+  --config 'model_reasoning_effort="high"' \
   -
 ```
 
@@ -97,7 +100,8 @@ claude -p \
   --permission-mode plan \
   --output-format json \
   --no-session-persistence \
-  --model fable
+  --model fable \
+  --effort high
 ```
 
 The host sends prompts over stdin and owns waiting and cancellation. LLM calls

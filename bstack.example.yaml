@@ -4,19 +4,24 @@ models:
   fast-code:
     executor: codex
     model: gpt-5.6-luna
+    reasoning: high
   deep-code:
     executor: codex
     model: gpt-5.6-sol
+    reasoning: high
   judgment:
     executor: claude
     model: fable
+    reasoning: high
   critic:
     executor: claude
     model: fable
+    reasoning: high
 
 # Version 1 scalar entries remain valid and mean:
 #   role: {executor: auto, model: <scalar>}
 # `auto` uses native host delegation. Explicit executors run their named CLI.
+# Omit `reasoning` or set it to `auto` to inherit the route's default.
 
 limits:
   max-parallel: 3

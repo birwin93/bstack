@@ -1,6 +1,6 @@
 ---
 name: bstack-runtime
-description: Internal runtime contract for bstack skills. Use only when Poteto Mode or another bstack orchestration skill needs host capabilities, model roles, limits, or authorization state.
+description: Internal runtime contract for bstack skills. Use only when Poteto Mode or another bstack orchestration skill needs host capabilities, model roles, reasoning levels, limits, or authorization state.
 metadata:
   compatibility: Works in Agent Skills clients that can read files. Delegation, scheduling, transcript access, and connected tools are optional capabilities.
 ---
@@ -38,10 +38,14 @@ models:
   deep-code:
     executor: codex
     model: gpt-5.6-sol
+    reasoning: high
 ```
 
-Normalize a scalar as `{executor: auto, model: <scalar>}`. Executor values have
-literal meanings:
+Normalize a scalar as `{executor: auto, model: <scalar>}`. `reasoning` is
+optional in a version 2 route. Omission and `reasoning: auto` both preserve the
+route's default: a native `auto` route inherits the parent session's reasoning
+level, while an explicit CLI route uses the provider's configured default.
+Executor values have literal meanings:
 
 - `auto` uses native host delegation and inherits the parent model when the
   route omits a model.
@@ -49,8 +53,11 @@ literal meanings:
 - `claude` runs the configured model through `claude -p`.
 
 Configuration must not become an arbitrary command or provider-flag escape
-hatch. Never silently replace an explicit executor or model with another one.
-If the host cannot run an explicit CLI route, report that route as unavailable.
+hatch. `reasoning` is the only provider control beyond model selection and the
+runtime owns its translation. Never silently replace an explicit executor,
+model, or reasoning level with another one. If the host cannot run an explicit
+CLI route or apply an explicit reasoning level, report that route as
+unavailable.
 
 Read [references/executors.md](references/executors.md) before starting an
 explicit CLI route. Start the fixed command through the host's process
@@ -86,7 +93,7 @@ When scheduling is unavailable, use bounded waits within the current turn and
 report the remaining predicate. When history or a connected-tool category is
 unavailable, name the gap instead of inventing evidence.
 
-## Resolve model roles
+## Resolve model roles and reasoning
 
 bstack uses semantic roles rather than provider model slugs:
 
@@ -95,13 +102,15 @@ bstack uses semantic roles rather than provider model slugs:
 - `judgment` for architecture, synthesis, and ambiguous decisions.
 - `critic` for independent review.
 
-For `auto` routes, map a configured role only to a model that the active host
-confirms is available. For explicit CLI routes, use the provider model from
-configuration. The active host's model catalog does not need to contain a
-model owned by another CLI. Omit the model flag when the configured model is
-`auto`. If the CLI rejects a configured model, report the error without
-substitution. Never guess a model slug. Panel size determines reviewer count;
-repeated roles still count toward limits.
+For `auto` routes, map a configured role only to a model and reasoning level
+that the active host confirms are available together. Pass an explicit
+reasoning level through the host's native delegation control. For explicit CLI
+routes, use the provider model and reasoning level from configuration; the
+active host's catalog does not need to contain values owned by another CLI.
+Omit model and reasoning overrides when their configured value is `auto`. If
+the host or CLI rejects a configured model/reasoning combination, report the
+error without substitution. Never guess a model slug or reasoning value. Panel
+size determines reviewer count; repeated roles still count toward limits.
 
 ## Authorization
 

@@ -3,7 +3,9 @@
 Resolve routes by executor:
 
 - For `auto`, use the collaboration tools exposed by the current Codex session
-  for delegation and waiting.
+  for delegation and waiting. Pass an explicit configured `reasoning` value as
+  the native reasoning-effort override only when the selected model supports
+  it; omit the override when `reasoning` is omitted or `auto`.
 - For `codex`, start `codex exec` through the terminal execution tool.
 - For `claude`, start `claude -p` through the terminal execution tool.
 
@@ -33,5 +35,5 @@ current session exposes them and the requested workflow needs them. Use current
 thread history or memory tools only within their stated scope.
 
 Model identifiers and supported reasoning levels come from the current host.
-Apply that catalog only to native `auto` routes. Omit model overrides when a
-semantic role resolves to `auto`.
+Apply that catalog only to native `auto` routes. Omit model or reasoning
+overrides when the corresponding semantic-role value resolves to `auto`.
