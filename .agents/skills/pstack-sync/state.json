@@ -1,0 +1,7 @@
+{
+  "upstream_url": "https://github.com/cursor/plugins.git",
+  "upstream_branch": "main",
+  "upstream_path": "pstack",
+  "last_checked_commit": "7314f723a487ec406b6369fe5865ba034cfed166",
+  "last_checked_at": "2026-09-03T16:39:23Z"
+}

@@ -27,6 +27,8 @@ MIT license in [LICENSE](LICENSE).
 - `skills/bstack-runtime` resolves the host adapter, configuration, model
   roles, reasoning levels, executor routes, and authorization policy.
 - Other folders under `skills/` are callable Agent Skills used by playbooks.
+- `.agents/skills/pstack-sync` is a repo-local maintainer skill for reviewing
+  upstream pstack changes. It is not part of the installed bstack bundle.
 - `bstack.example.yaml` documents optional configuration.
 - `scripts/validate_skills.py` validates the portable skill bundle.
 

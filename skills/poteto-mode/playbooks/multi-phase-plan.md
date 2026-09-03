@@ -10,7 +10,7 @@
 6. Run `node skills/poteto-mode/scripts/check-plan.mjs <plan.md>` from the installed bstack root and fix every line it prints (the **encode-lessons-in-structure** principle skill). It enforces the skeleton's shape, the verification rule in every verification block, and the punctuation rules.
 7. Hand back. Post the plan path and the script's output, then stop. Execution starts on the operator's explicit go, under the execution playbook the plan names.
 
-**Verification.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked (the **prove-it-works** principle skill). That sentence is the verification rule. Every verification block opens with it. The live block is mandatory. Ten lanes on `fast-code` at the PR head drive the real surface through its control skill, per the **swarm** skill. Each lane is one box with a concrete scenario, the screenshot it saves, and its pass predicate. The perf block names the metric, the probe, the trunk baseline measured first, and the rule with the number that fails. A PR that changes an interaction is review-gated. The operator reviews it in chat with screenshots and a video before merge. A PR that changes no interaction writes `**Review gate.** None. <PR id> is not review-gated.` and no boxes under it.
+**Verification.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked (the **prove-it-works** principle skill). That sentence is the verification rule. Every verification block opens with it. The live block is mandatory. Ten lanes on `fast-code` at the PR head drive the real surface through its control skill, per the **swarm** skill. Each lane is one box with a concrete scenario, the screenshot it saves, and its pass predicate. One lane runs the same load-bearing scenario on trunk and head. If trunk lacks the feature, that lane records the absence and verifies the behavior the diff adds plus the end state the user waits for. The perf gate is dual-sided, so trunk and head must both produce the named metric. When trunk lacks the feature, isolate the work added by the diff and set absolute budgets for that work and the user-visible end state instead of comparing unlike scenarios. The perf block names the metric, the interleaved probe, the trunk baseline measured first, and the rule with the number that fails. A PR that changes an interaction is review-gated. The operator reviews it in chat with screenshots and a video before merge. A PR that changes no interaction writes `**Review gate.** None. <PR id> is not review-gated.` and no boxes under it.
 
 **Control capability.** Pick it by surface from the capabilities the runtime actually exposes. Browser and web UIs need browser control, CLIs and TUIs need terminal control, and native mobile needs a simulator-driving capability. A PR that touches two surfaces gets lanes on both. A surface with no control capability is a risk in Appendix C, and its live block still names how each lane drives it.
 
@@ -99,7 +99,7 @@ Each live lane runs in its own isolated environment at the PR head. Drive throug
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `fast-code` at the PR head, per the boot recipe.
 
-- [ ] Lane 1. <Scenario.> Save `<slug>.png`. Pass when <predicate>.
+- [ ] Lane 1. Regression against trunk. Run <the same load-bearing scenario> at trunk and head. If trunk lacks the feature, record that and verify <the behavior the diff adds plus the end state the user waits for>. Save `<slug>.png`. Pass when <predicate>.
 - [ ] Lane 2. <Scenario.> Save `<slug>.png`. Pass when <predicate>.
 - [ ] Lane 3. <Scenario.> Save `<slug>.png`. Pass when <predicate>.
 - [ ] Lane 4. <Scenario.> Save `<slug>.png`. Pass when <predicate>.
@@ -112,10 +112,10 @@ Each live lane runs in its own isolated environment at the PR head. Drive throug
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. <What is measured.>
-- [ ] Probe. <The command or procedure, run at trunk and at the head, interleaved.>
+- [ ] Metric. <What is measured at trunk and head. If trunk lacks the feature, also name the work added by the diff and the end-to-end state the user waits for.>
+- [ ] Probe. <The command or procedure, run at trunk and at the head, interleaved. Both sides must produce the metric.>
 - [ ] Baseline. Record the trunk <value> first.
-- [ ] Rule. <Head against trunk, with the number that fails.>
+- [ ] Rule. <Head against trunk, with the number that fails. If the scenarios differ, use absolute budgets for the added work and the user-visible end state instead of a ratio.>
 
 **Review gate.** The operator reviews before merge.
 

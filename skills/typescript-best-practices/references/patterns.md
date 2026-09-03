@@ -4,7 +4,7 @@ Code examples for each rule in `SKILL.md`. The underlying principles are languag
 
 ## Branded types
 
-Brand primitives so they can't be mixed up. Validate once at creation; downstream code trusts the type.
+Brand primitives so they can't be mixed up. Validate once at the boundary; downstream code trusts the type.
 
 ```ts
 type AgentId = string & { readonly __brand: "AgentId" };
@@ -126,6 +126,34 @@ function handle(input: unknown) {
 ```
 
 External sources include RPC payloads, `JSON.parse`, `postMessage`, IPC, file contents, environment variables, database results.
+Treat `JSON.parse(body) as Issue` as an unvalidated boundary, not a parser.
+
+## Schemas before hand-rolled guards
+
+Before writing a property-by-property type guard for external data, look for
+the repository's runtime schema library and existing schemas. Let one schema
+own validation and derive the TypeScript type from it. Do not maintain a
+schema, a duplicate interface, and a guard that can drift apart.
+
+```ts
+import { z } from "zod";
+
+const UserSchema = z.object({
+  id: z.string().uuid(),
+  role: z.enum(["admin", "member"]),
+});
+
+type User = z.infer<typeof UserSchema>;
+
+function parseUser(input: unknown): User {
+  return UserSchema.parse(input);
+}
+```
+
+Use `safeParse` when failure is an expected branch. Use the equivalent
+inference helper when the repository uses another schema library. Do not add a
+new schema dependency for one guard. Prefer the schema system the codebase
+already trusts.
 
 ## No `as` casts
 
@@ -242,6 +270,84 @@ Validate once where data crosses in; trust types inside. See the **boundary-disc
 - **Wire formats** (proto, JSON-RPC): parse with `ignoreUnknownFields` so forward-compatible changes don't break old clients.
 - **Persisted JSON:** versioned blob with a try/catch around the parse.
 - **Don't re-validate** deep in call chains.
+
+Keep the boundary shape separate when it admits states the domain does not. Parse
+and translate once instead of carrying a DTO, generated message, or optional-field
+bag through business logic.
+
+```ts
+import { z } from "zod";
+
+const issuePayloadSchema = z.object({
+  issue_id: z.string().min(1),
+  attempt_count: z.coerce.number().int().nonnegative(),
+});
+
+type Issue = {
+  id: string;
+  attemptCount: number;
+};
+
+function parseIssue(input: unknown): Issue {
+  const payload = issuePayloadSchema.parse(input);
+  return { id: payload.issue_id, attemptCount: payload.attempt_count };
+}
+```
+
+## Explicit boundary failures
+
+Reject invalid data where it enters. A plausible default hides the broken input
+and makes downstream types look more trustworthy than the value is.
+
+```ts
+// Don't. Invalid and missing values silently become a valid limit.
+function parseLimitWithFallback(input: unknown): number {
+  return Number(input) || 0;
+}
+
+// Do. A defined fallback belongs in the schema; otherwise parsing fails.
+import { z } from "zod";
+
+const limitSchema = z.coerce.number().int().nonnegative();
+
+function parseLimit(input: unknown): number {
+  return limitSchema.parse(input);
+}
+```
+
+Use a fallback only when the product contract says the missing or invalid value
+means that fallback.
+
+## Preserve source values
+
+Do not overwrite source data with a normalized form merely because a lookup needs
+one. Keep the value users or upstream systems supplied and derive the comparison
+key separately.
+
+```ts
+type FacilityName = {
+  source: string;
+  lookupKey: string;
+};
+
+function parseFacilityName(source: string): FacilityName {
+  return {
+    source,
+    lookupKey: source.trim().toLowerCase(),
+  };
+}
+```
+
+Normalization still needs a real product or boundary reason. Do not add it as
+generic cleanup.
+
+## Reuse before extracting
+
+Search the repository for an existing helper, transform, or adapter before adding
+one. Reuse it only when its input, output, error behavior, and domain meaning match.
+Extract a shared helper when a real invariant or boundary adapter repeats. Keep
+feature logic local when the similarity is only syntax. Broad `sanitize*`,
+`normalize*`, and `clean*` helpers usually mix contracts that should stay separate.
 
 ## Schema-derived types
 
