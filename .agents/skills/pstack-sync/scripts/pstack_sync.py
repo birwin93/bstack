@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from pstack_artifacts import ArtifactError, apply_preview, coverage, preview, save_review
+
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
 STATE_PATH = SKILL_DIR / "state.json"
@@ -145,24 +147,6 @@ def inspect(root: Path) -> None:
         "--",
         upstream_path,
     ).stdout.splitlines()
-    changed_lines = run_git(
-        cache,
-        "diff",
-        "--name-status",
-        "--find-renames",
-        f"{base}..{head}",
-        "--",
-        upstream_path,
-    ).stdout.splitlines()
-    diff_stat = run_git(
-        cache,
-        "diff",
-        "--stat",
-        f"{base}..{head}",
-        "--",
-        upstream_path,
-    ).stdout.rstrip()
-
     pending = {
         "base_commit": base,
         "head_commit": head,
@@ -173,6 +157,8 @@ def inspect(root: Path) -> None:
     }
     pending_path = root / ".bstack" / "pstack-sync" / "pending.json"
     pending_path.parent.mkdir(parents=True, exist_ok=True)
+    review = save_review(root, cache, pending)
+    pending["review_path"] = str(review)
     pending_path.write_text(json.dumps(pending, indent=2) + "\n", encoding="utf-8")
 
     report = {
@@ -181,8 +167,8 @@ def inspect(root: Path) -> None:
         "cache_path": str(cache),
         "pending_path": str(pending_path),
         "commits_touching_pstack": commit_lines,
-        "changed_files": changed_lines,
-        "diff_stat": diff_stat,
+        "changed_file_count": len(load_json(review / "dispositions.json")["entries"]),
+        "dispositions_path": str(review / "dispositions.json"),
     }
     print(json.dumps(report, indent=2))
 
@@ -202,6 +188,12 @@ def mark(root: Path) -> None:
         raise SyncError(
             f"state moved from pending base {base} to {current}; inspect again"
         )
+
+    review = Path(require_string(pending, "review_path"))
+    snapshot, _ = coverage(root / ".bstack/pstack-sync/upstream", review)
+    if any(snapshot.get(key) != pending.get(key) for key in
+           ("base_commit", "head_commit", "upstream_url", "upstream_branch", "upstream_path")):
+        raise SyncError("review snapshot no longer matches pending range; inspect again")
 
     state["last_checked_commit"] = head
     state["last_checked_at"] = datetime.now(timezone.utc).isoformat(
@@ -224,27 +216,44 @@ def mark(root: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Inspect and mark the upstream pstack review cursor."
+        description="Review upstream pstack changes and prepare explicit, checked ports."
     )
     parser.add_argument(
         "command",
-        choices=("inspect", "mark"),
-        help="inspect upstream without moving the cursor, or mark the pending range reviewed",
+        choices=("inspect", "coverage", "mark", "port-preview", "port-apply"),
     )
     parser.add_argument(
         "--repo-root",
         default=".",
         help="bstack repository root, defaults to the current directory",
     )
+    parser.add_argument("--review", help="saved review directory printed by inspect")
+    parser.add_argument("--preview", help="candidate directory printed by port-preview")
+    parser.add_argument("--path", action="append", default=[], help="reviewed target to apply; repeat for multiple files")
     args = parser.parse_args()
 
     try:
         root = repository_root(args.repo_root)
         if args.command == "inspect":
             inspect(root)
-        else:
+        elif args.command == "mark":
             mark(root)
-    except SyncError as error:
+        elif args.command in {"coverage", "port-preview"}:
+            if not args.review:
+                raise SyncError("--review is required")
+            review = Path(args.review).resolve()
+            cache = root / ".bstack/pstack-sync/upstream"
+            if args.command == "coverage":
+                _, entries = coverage(cache, review)
+                print(json.dumps({"reviewed_paths": len(entries), "review_path": str(review)}, indent=2))
+            else:
+                directory = preview(root, cache, review)
+                print(json.dumps({"preview_path": str(directory), "plan_path": str(directory / "plan.json")}, indent=2))
+        else:
+            if not args.preview:
+                raise SyncError("--preview is required")
+            print(json.dumps(apply_preview(root, Path(args.preview).resolve(), args.path), indent=2))
+    except (SyncError, ArtifactError, OSError) as error:
         print(f"pstack-sync: {error}", file=sys.stderr)
         return 1
     return 0

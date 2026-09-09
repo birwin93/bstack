@@ -2,7 +2,7 @@
 name: setup-bstack
 description: Configure bstack model roles, reasoning levels, fan-out limits, and authorization defaults for a user or repository. Use when the user asks to set up bstack, change Poteto Mode models or reasoning, or tune its execution limits.
 metadata:
-  compatibility: Requires file access. Model and reasoning enumeration are optional; unavailable catalogs fall back to auto.
+  compatibility: Requires file access. Model and reasoning enumeration are optional. Unavailable catalogs fall back to auto.
 ---
 
 # Setup bstack
@@ -29,14 +29,14 @@ ask before writing. Do not infer a team-wide policy from a personal setup task.
 Load **bstack-runtime**. Enumerate models and reasoning levels only when the
 current host or selected provider CLI exposes a dependable catalog. Never guess
 a provider slug or reasoning value. `auto` is always valid. For native routes
-it inherits the parent model or reasoning level; for explicit CLI routes it
+it inherits the parent model or reasoning level. For explicit CLI routes it
 uses that provider's default.
 
 Map these semantic roles:
 
-- `fast-code` for narrow mechanical work;
-- `deep-code` for difficult precise implementation;
-- `judgment` for architecture and synthesis;
+- `fast-code` for narrow mechanical work.
+- `deep-code` for difficult precise implementation.
+- `judgment` for architecture and synthesis.
 - `critic` for independent review.
 
 For cross-CLI routing, write version 2 structured entries:

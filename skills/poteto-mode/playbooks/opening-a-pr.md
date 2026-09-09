@@ -1,9 +1,11 @@
 ### Opening a PR
 
-Run only when the user explicitly asks to open or prepare a pull request. Load
-**bstack-runtime** and confirm that `commit`, `push`, and `open-pr` are
-authorized. Opening a pull request normally implies the necessary commit and
-push for the scoped change, but never implies merge or deployment authority.
+Run only when the user explicitly asks to open or prepare a pull request.
+Drafting a title or description does not require publication. Before committing,
+pushing, or opening the PR, load **bstack-runtime** and confirm authorization
+for the needed action. Opening a pull request normally implies the necessary
+commit and push for the scoped change, but never implies merge or deployment
+authority.
 
 **Worktree.** Inspect the current branch, status, base, and remotes before
 editing history. Preserve unrelated changes. When the checkout contains
@@ -24,16 +26,24 @@ permission to install another package or widen scope.
 **Title.** Use the repository's convention. When none exists, use
 `type(scope): imperative subject` with a concrete changed area.
 
-**Description.** Include only sections that carry information:
+**Description.** Write a briefing a reviewer can read in under a minute. Explain
+why the change exists, what behavior changes, and how you verified it. Aim for
+about 40 lines or fewer, while honoring the repository template and retaining
+material evidence and limitations. Include only sections that carry information:
 
-- `## Why` for intent and approach.
-- `## Scope` for changed behavior and explicit boundaries.
-- `## Tradeoffs` for real choices.
-- `## Blast Radius` for affected consumers and risk.
-- `## Verification` for commands, surfaces, and outcomes.
+- `## Why` for intent and approach in one or two short paragraphs. Omit SHA
+  histories and rebase details.
+- `## Scope` for changed behavior, real symbols, and paths. Name both sides of
+  a rename. State boundaries when they matter. Avoid a file-by-file essay.
+- `## Tradeoffs` for alternatives a reviewer would otherwise ask about.
+- `## Blast Radius` for affected consumers and risk in one to three sentences.
+- `## Verification` for each real run path and outcome. For performance work,
+  give the primary before and after measurement with units. Include uncertainty
+  or methodology when it changes how the result should be interpreted.
 
-Attach screenshots or recordings only when they prove a claim. Never claim
-verification that was not run.
+Link detailed logs, experiment tables, and review artifacts instead of copying
+them into the body. Attach screenshots or recordings when they prove a claim.
+Never claim verification that was not run.
 
 **Stacks.** Use Graphite or another stack tool only when the repository already
 uses it and the user requested or accepted stacked delivery. Verify parentage

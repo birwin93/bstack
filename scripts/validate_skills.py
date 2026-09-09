@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import re
+import subprocess
 import sys
 from pathlib import Path
+
+from check_markdown import check_markdown
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -87,6 +91,9 @@ def is_vendored(path: Path) -> bool:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base", default="HEAD", help="Git base for Markdown regression checks")
+    args = parser.parse_args()
     failures: list[str] = []
     skill_files = sorted(SKILLS.glob("*/SKILL.md"))
     if not skill_files:
@@ -108,6 +115,16 @@ def main() -> int:
             for label, pattern in REMOVED_RUNTIME.items():
                 if pattern.search(text):
                     failures.append(f"{path.relative_to(ROOT)}: {label}")
+
+    try:
+        markdown = check_markdown(ROOT, args.base)
+        failures.extend(markdown["errors"])
+        for warning in markdown["warnings"]:
+            print(f"Markdown review: {warning}")
+        for path in markdown["code_blocks_changed"]:
+            print(f"Markdown review: code blocks changed in {path}; inspect the diff")
+    except (OSError, subprocess.CalledProcessError) as error:
+        failures.append(f"Markdown check failed: {error}")
 
     if failures:
         print("bstack validation failed:")
