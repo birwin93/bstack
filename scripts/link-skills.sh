@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -ne 1 ]]; then
-  echo "usage: $0 <agent-skills-directory>" >&2
+if [[ $# -gt 1 ]]; then
+  echo "usage: $0 [agent-skills-directory]" >&2
   exit 64
 fi
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_dir="$(cd "${script_dir}/.." && pwd)"
 source_dir="${repo_dir}/skills"
-target_dir="${1%/}"
+target_dir="${1:-${HOME}/.agents/skills}"
+target_dir="${target_dir%/}"
 conflicts=0
 
 mkdir -p "${target_dir}"

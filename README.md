@@ -47,15 +47,14 @@ python3 scripts/validate_skills.py
 
 ## Install locally
 
-Link the bundle into any Agent Skills-compatible client by passing its skills
-directory explicitly:
+Link the bundle into `~/.agents/skills`:
 
 ```sh
-./scripts/link-skills.sh ~/.agents/skills
+./scripts/link-skills.sh
 ```
 
-For a repository-local installation, pass that repository's supported skills
-directory instead. The installer refuses to replace an existing skill with the
+Pass a skills directory as an argument to use another location, including a
+repository-local installation. The installer refuses to replace an existing skill with the
 same name; resolve those conflicts deliberately, then rerun it. Symlinks keep a
 development checkout current as this repository changes.
 
