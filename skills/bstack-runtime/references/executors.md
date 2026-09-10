@@ -40,7 +40,6 @@ template:
 
 ```sh
 claude -p \
-  --restricted \
   --strict-mcp-config \
   --permission-mode plan \
   --output-format json \
@@ -50,8 +49,8 @@ claude -p \
 ```
 
 For an authorized writer, run from the worker's isolated worktree and change
-the permission mode to `acceptEdits`. Keep `--restricted` and
-`--strict-mcp-config`. Omit `--model` when the route's model is `auto`. Do not
+the permission mode to `acceptEdits`. Keep `--strict-mcp-config`.
+Omit `--model` when the route's model is `auto`. Do not
 pass `--effort` when `reasoning` is omitted or `auto`. Do not pass
 permission-bypass flags.
 

@@ -101,7 +101,6 @@ Claude read-only routes use this command shape:
 
 ```sh
 claude -p \
-  --restricted \
   --strict-mcp-config \
   --permission-mode plan \
   --output-format json \
