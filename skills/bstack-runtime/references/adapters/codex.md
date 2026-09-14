@@ -11,9 +11,10 @@ Resolve routes by executor:
 
 Read [../executors.md](../executors.md) for the fixed CLI arguments. Set the
 terminal's working directory to the worker's repository or owned worktree.
-Start the CLI with a PTY when the terminal tool needs one to keep stdin open.
-Send the prompt through the terminal session's stdin, then send EOF. Never put
-the prompt in the shell command.
+Write the complete prompt to a private scratch file and redirect that file to
+stdin in the launch command. This works without a PTY or a later input write.
+If using session stdin instead, first confirm the terminal keeps it open until
+the prompt and EOF arrive. Never put prompt text in the shell command.
 
 If a terminal call yields before the CLI exits, keep its session identifier
 and wait on the same session. Yield and polling durations only control when
@@ -23,8 +24,12 @@ worker.
 
 For Codex JSONL output, use the final completed agent message as the worker's
 result. For Claude JSON output, use the top-level `result` text. Report a
-nonzero exit or malformed result to the parent without substituting another
-route.
+nonzero exit, malformed result, reported execution error, or missing required
+tool access to the parent. Apply the runtime's
+[recovery rule](../../SKILL.md#recover-explicit-executor-failures) before
+declaring the route blocked. Correct an accidental read-only launch for an
+authorized writer without requesting the same authority again. If the host
+forbids escalation, do not send escalation parameters or bypass its policy.
 
 Respect the session's concurrency limit and any rule that restricts when
 subagents or terminal workers may be created. Count native and CLI workers

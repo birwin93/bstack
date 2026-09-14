@@ -43,7 +43,7 @@ Load **bstack-runtime**. Start the configured reviewer panel through its read-on
 | Reviewer C | `fast-code` |
 | Reviewer D | `critic` |
 
-Each reviewer receives one resolved semantic role and a read-only contract. If a configured model cannot be resolved, inherit the parent model and report the fallback. Never mutate configuration or open a pull request as a side effect of review.
+Each reviewer receives one resolved semantic role and a read-only contract. If a configured model cannot be resolved, report the error without substitution. For an unavailable or failed explicit `claude` or `codex` route, apply the runtime's [recovery rule](../bstack-runtime/SKILL.md#recover-explicit-executor-failures), including up to three retries for recoverable errors. Never mutate configuration or open a pull request as a side effect of review.
 
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent

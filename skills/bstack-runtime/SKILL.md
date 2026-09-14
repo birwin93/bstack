@@ -53,11 +53,11 @@ Executor values have literal meanings:
 - `claude` runs the configured model through `claude -p`.
 
 Configuration must not become an arbitrary command or provider-flag escape
-hatch. `reasoning` is the only provider control beyond model selection and the
-runtime owns its translation. Never silently replace an explicit executor,
+hatch. `reasoning` is the only configurable provider control beyond model
+selection. The runtime owns its translation and the scoped permission controls
+described in the executor reference. Never silently replace an explicit executor,
 model, or reasoning level with another one. If the host cannot run an explicit
-CLI route or apply an explicit reasoning level, report that route as
-unavailable.
+CLI route or apply an explicit reasoning level, follow the recovery rule below.
 
 Read [references/executors.md](references/executors.md) before starting an
 explicit CLI route. Start the fixed command through the host's process
@@ -65,10 +65,14 @@ capability, send the prompt over stdin, and let the host own waiting and
 cancellation. Never impose a wall-clock deadline on an LLM call. A tool yield
 or progress polling interval must not terminate the CLI process.
 
-Read-only mode is the default. `workspace-write` requires explicit local-write
-authority and an isolated worktree owned by the worker. Do not use approval-
-bypass flags or arbitrary provider flags. Every CLI worker counts against both
-bstack's `max-parallel` limit and any lower host limit.
+Choose permissions from the assignment before launching. Inspection and review
+use read-only mode. A request to implement, fix, or create a local artifact
+already authorizes the necessary local writes; pass that authority to the
+worker and use `workspace-write` in its isolated worktree. Do not ask again
+merely because work is delegated. Use only the scoped permission controls in
+the executor reference, never approval-bypass flags or arbitrary provider
+flags. Every CLI worker counts against both bstack's `max-parallel` limit and
+any lower host limit.
 
 ## Resolve the host
 
@@ -88,7 +92,9 @@ Read exactly one adapter under `references/adapters/` when the host is known.
 Read `generic.md` when it is not. Adapter files are examples of mappings, not
 authority to use a capability the current session does not expose.
 
-When delegation is unavailable, execute serially and preserve the playbook.
+When native delegation is unavailable for an `auto` route, execute serially
+and preserve the playbook. An unavailable or failed explicit `claude` or
+`codex` route must follow the recovery rule below.
 When scheduling is unavailable, use bounded waits within the current turn and
 report the remaining predicate. When history or a connected-tool category is
 unavailable, name the gap instead of inventing evidence.
@@ -111,6 +117,52 @@ Omit model and reasoning overrides when their configured value is `auto`. If
 the host or CLI rejects a configured model/reasoning combination, report the
 error without substitution. Never guess a model slug or reasoning value. Panel
 size determines reviewer count; repeated roles still count toward limits.
+
+## Recover explicit executor failures
+
+For a recoverable `claude` or `codex` failure, retry the same route up to three
+times after the initial attempt, four attempts total per worker assignment.
+Do not ask permission for these retries. Keep the executor, model, reasoning,
+scope, and existing authorization. Record the attempt count, concrete error,
+and correction in the task's working record; respawning or resuming does not
+reset the budget. A tool yield or progress poll is not a failed attempt.
+
+Before retrying, inspect the failure and fix its cause when possible:
+
+- Missing stdin, bad quoting, wrong working directory, or an incorrect launch
+  option: repair the invocation and resend the complete prompt.
+- A worker launched read-only for authorized local edits, or a needed tool
+  omitted from the launch: correct the worker's mode or scoped tool allowance
+  within the authority already granted by the task and host.
+- A transient connection, rate-limit, or provider error: honor provider retry
+  guidance and use increasing delays between attempts. Missing or malformed
+  final output also warrants a retry after inspecting the process result.
+
+Before each retry, confirm the previous process has exited and inspect any
+artifacts or side effects. Preserve completed work and retry only unfinished
+work. If an external mutation may have succeeded, verify its outcome before
+replaying it; an unknown outcome is a reason to stop, not to duplicate it.
+
+Stop early for failures a same-route retry cannot fix: missing credentials
+that require user login, a confirmed unavailable model or reasoning level,
+an unavailable host capability, or a genuine access or policy denial. Do not
+weaken host restrictions, override an explicit deny, enable bypass flags, or
+change persistent permission settings to make a retry succeed. A mistaken
+worker launch mode is distinct from an actual denial of authority.
+
+After three unsuccessful retries, or a nonrecoverable failure, stop the
+dependent workflow and report the role, executor, model, attempts, concrete
+error, preserved artifacts, and unfinished steps. Continue independent
+authorized work when useful. Do not switch routes, inherit the parent model,
+do the failed assignment yourself, shrink the panel, or claim completion with
+missing required review. Ask only for the specific access or decision needed
+to unblock the remaining work.
+
+This rule takes precedence over serial execution, dropout, and unavailable
+delegation fallbacks in consuming skills and playbooks. Check exit status,
+provider error indicators, final output, and required tool access; a zero exit
+code alone does not establish success. Ordinary findings from a completed
+review or failing project tests are task results, not executor failures.
 
 ## Authorization
 

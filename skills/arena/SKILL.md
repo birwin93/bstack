@@ -35,7 +35,7 @@ Start all independent candidates through the runtime's parallel delegation capab
 
 Each rationale names the alternatives the candidate considered and what it rejected.
 
-If a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record.
+If an explicit `claude` or `codex` candidate or judge route fails, apply the runtime's [recovery rule](../bstack-runtime/SKILL.md#recover-explicit-executor-failures), including up to three retries for recoverable errors. For an `auto` candidate dropout, proceed with N-1 and note the dropout in the synthesis record.
 
 ## Phase C: Cross-judge
 

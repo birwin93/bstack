@@ -84,7 +84,9 @@ replaces an explicit executor, model, or reasoning level. Omit `reasoning` or
 set it to `auto` to inherit the native parent session or the explicit CLI's
 provider default.
 
-Codex read-only routes use this command shape:
+Write the complete worker prompt to a private scratch file before launching.
+Replace `/absolute/scratch/worker-prompt.txt` below with its path. Codex
+read-only routes use this command shape:
 
 ```sh
 codex exec \
@@ -94,7 +96,7 @@ codex exec \
   --json \
   --model gpt-5.6-sol \
   --config 'model_reasoning_effort="high"' \
-  -
+  - < /absolute/scratch/worker-prompt.txt
 ```
 
 Claude read-only routes use this command shape:
@@ -106,15 +108,27 @@ claude -p \
   --output-format json \
   --no-session-persistence \
   --model fable \
-  --effort high
+  --effort high < /absolute/scratch/worker-prompt.txt
 ```
+
+Recoverable Claude or Codex failures get up to three automatic retries after
+the initial attempt, four attempts total, using the same configured route.
+Repair missing stdin and mistaken worker permissions within existing task
+authority before retrying. Stop dependent work after exhaustion or a genuine
+access, authentication, or policy blocker; preserve completed work and required
+review coverage. See the runtime's
+[recovery rule](skills/bstack-runtime/SKILL.md#recover-explicit-executor-failures).
 
 The host sends prompts over stdin and owns waiting and cancellation. LLM calls
 have no wall-clock deadline. A terminal yield or polling interval only controls
 progress delivery. It must not terminate the process.
 
-`workspace-write` requires explicit local-write authority and an isolated
-worktree owned by the worker. CLI processes count against both bstack's
+An implementation request authorizes its necessary local edits. Launch that
+worker in its isolated worktree with Codex `workspace-write` or Claude
+`acceptEdits`, carrying the existing authorization forward. The runtime's
+[executor reference](skills/bstack-runtime/references/executors.md) covers
+scoped tool allowances for commands that still require permission.
+CLI processes count against both bstack's
 `max-parallel` limit and any lower host limit.
 
 Host adapters describe execution mechanics; shared skills must not name a

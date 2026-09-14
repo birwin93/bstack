@@ -59,9 +59,12 @@ different explicit executor, model, or reasoning level.
 
 The supported CLI commands are fixed. Do not write arbitrary commands or
 provider flags into configuration. `reasoning` is translated by the runtime to
-the selected host or CLI's supported control. Read-only execution is the
-default. Workspace-write execution requires explicit local-write authority and
-an isolated worktree.
+the selected host or CLI's supported control. Inspection uses read-only mode.
+Implementation uses workspace-write in an isolated worktree with the local
+write authority already granted by the user's request. Delegation does not
+require a second permission prompt. Follow the runtime's
+[recovery rule](../bstack-runtime/SKILL.md#recover-explicit-executor-failures)
+for launch errors and permission mismatches within that authority.
 
 When a configured model or reasoning level is no longer available, propose
 `auto` or a confirmed replacement. A panel's size, not repeated model names,

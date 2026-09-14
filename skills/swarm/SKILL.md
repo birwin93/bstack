@@ -34,7 +34,7 @@ When a worker needs a non-default branch or environment, resolve it explicitly f
 
 Every brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence.
 
-If a worker drops out, proceed with N-1 and note it.
+If an explicit `claude` or `codex` worker route fails, apply the runtime's [recovery rule](../bstack-runtime/SKILL.md#recover-explicit-executor-failures), including up to three retries for recoverable errors. For an `auto` worker dropout, proceed with N-1 and note it.
 
 ## Phase C: Aggregate
 

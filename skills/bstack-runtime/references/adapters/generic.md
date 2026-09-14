@@ -2,8 +2,11 @@
 
 Use native delegation only for `auto` routes. For explicit `codex` and `claude`
 routes, read [../executors.md](../executors.md). The client must expose a
-process capability that can send stdin, wait without terminating the process,
-and cancel on request. Otherwise report the explicit route as unavailable.
+process capability that can supply stdin at launch or through a writable
+session, wait without terminating the process, and cancel on request. A prompt
+file redirected to stdin works without later session input. For launch errors
+or unavailable capabilities, follow the runtime's
+[recovery rule](../../SKILL.md#recover-explicit-executor-failures).
 
 Use only capabilities described by the current client. If the client exposes
 no subagents, run an `auto` route serially. If it exposes no scheduler, use
