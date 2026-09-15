@@ -31,8 +31,8 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ### Arm the program
 
-- [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, record the durable objective with this exact text. "<The plan path, the PR ids in order, the verification rule, who merges, the authorization boundary, and the done condition.>"
+- [ ] State the protocol and this plan to the operator, then stop. Start execution only on the operator's explicit go.
+- [ ] On the operator's go, record the durable objective with this exact text. "<The plan path, the PR ids in order, the verification rule, who merges, the authorization boundary, and the done condition.>"
 - [ ] Read these from the current installed bstack root at program start. Re-read them at every tick.
   - [ ] `skills/poteto-mode/playbooks/<execution playbook>.md`
   - [ ] `skills/swarm/SKILL.md`
@@ -40,7 +40,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] `skills/poteto-mode/playbooks/opening-a-pr.md`
   - [ ] `skills/<each other leaf skill the program uses>`
 - [ ] Arm the 30-minute audit tick through the runtime's schedule or wake capability. If unavailable, checkpoint durably and tell the operator that continuous monitoring is unavailable.
-- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook and the recorded objective. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by durable evidence only. Stand down a stuck lane and dispatch its replacement now. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
+- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook and the recorded objective. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by durable evidence only. Stand down a stuck lane and dispatch its replacement now. Then post a status message in the current task's chat with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers. Follow the host and operator's notification policy. For heartbeats, stay quiet when nothing actionable changed unless periodic status updates were requested."
 - [ ] On the operator's hold or stand-down, send every owner a zero-writes order at once.
 
 ### Spawn owners

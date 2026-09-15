@@ -58,9 +58,18 @@ repository-local installation. The installer refuses to replace an existing skil
 same name; resolve those conflicts deliberately, then rerun it. Symlinks keep a
 development checkout current as this repository changes.
 
-After installation, ask the client to run `setup-bstack` if you want personal
-or repository model-role, reasoning, and fan-out configuration. No
-configuration is required for the defaults.
+After installation, run [setup-bstack](skills/setup-bstack/SKILL.md) to choose
+personal or repository settings for models, reasoning, and agent counts. Setup
+shows the current roles and offers Keep current/default, Large, Medium, and
+Small reasoning presets. No configuration is required for the defaults.
+
+For lower usage, start with Small, which caps explicit role reasoning at medium
+while preserving lower efforts, model choices, and inherited settings. Setup
+checks supported efforts and shows which roles would actually change. It also
+shows panel size and review rounds, which control repeated agent work. The
+preset is not a token or subscription cap and does not change the parent chat
+or independently configured jobs. See the
+[budget rules](skills/setup-bstack/SKILL.md#choose-a-reasoning-budget).
 
 ## Route work to native agents or CLIs
 
