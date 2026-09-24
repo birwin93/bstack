@@ -12,12 +12,13 @@ Encode recurring fixes in mechanisms (tools, code, metadata, automation) instead
 **Pattern:**
 When you catch yourself writing the same instruction a second time:
 1. Ask: can this be a lint rule, a metadata flag, a runtime check, or a script?
-2. If yes, encode it. Delete the instruction
-3. If no (requires judgment), make the instruction more prominent and add an example of the failure mode
+2. If yes, test a representative violation, a legitimate exception, and an equivalent expression of the same mistake before choosing the mechanism. Existing-code findings help measure signal; zero findings alone do not disqualify a preventative rule.
+3. Encode the part the mechanism can reliably detect. Remove prose only when enforcement fully covers the decision; otherwise keep a concise explanation and an example of the uncovered judgment.
+4. If no mechanism can reliably check it, make the instruction more prominent and add an example of the failure mode.
 
 **Pick the strongest mechanism.** When more than one mechanism would work, choose the strongest the situation allows (an unrepresentable state that cannot compile, then a lint or banned API that fails CI, then a canonical helper, then a runtime check), because agents copy whatever the surrounding code already does and a weaker guard becomes the next template.
 
-**Corollary:** If the fix is structural, only use the structural fix. The instruction is the symptom.
+**Corollary:** Use the structural fix for behavior it fully enforces. Keep guidance for context-dependent cases the mechanism cannot decide.
 
 **Feedback loop:**
 - **Capture every correction.** When the human intervenes or tests fail, decide if it's a one-off or a pattern.
