@@ -9,6 +9,12 @@ A test calls the code the way its users do and asserts the result they observe a
 
 The check: before you keep a test, name a plausible defect in its subject and confirm the assertion would reject it. Returning `undefined` is one probe when that would violate the contract. If that return is valid, use a different defect. Rewrite or delete a test that cannot distinguish the intended behavior from a relevant defect.
 
+Design the test around that defect:
+
+- Choose cases for distinct undesirable outcomes and meaningful boundaries, not a target test count. A smaller set of tests that catches real failures is more useful than many cases that repeat the same assertion.
+- Move repeated or involved setup into shared test helpers organized by purpose. Let helpers create the needed state and return useful handles; keep the action and expected behavior visible in the test. Do not add a helper for a trivial one-off fixture.
+- Spend assertions on what happens after the action. Do not repeatedly assert that fixtures contain the values the test just supplied. Check setup only when setup itself is under test or a failed prerequisite could make the behavior assertion pass for the wrong reason.
+
 **Why:** A test that cannot fail for a defect costs CI time and review attention and catches nothing. A constant pin also fails when someone edits the constant or the prompt it restates, so it prevents that edit.
 
 **Five shapes to examine for weak defect detection:**
