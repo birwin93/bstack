@@ -25,6 +25,7 @@ Scan for:
 - Library / framework quirks (config, lockfiles, env-var behavior, version-specific gotchas)
 - File or path conventions that aren't obvious from a glance at the code
 - Test commands, CI flags, and how to reproduce a failing run locally
+- Repeatable code practices that an existing or scoped new lint rule could check; identify the relevant lint setup and a useful diagnostic when evidence supports one
 - Debugging entry points: how to capture a trace, where logs land, which RPC to hit
 - Build / package-manager / sandbox surprises that cost minutes the first time
 
@@ -41,7 +42,7 @@ Two valid finding shapes:
 - The parent invoked the skill and you found a real gap in its body. Route to the skill's relevant section.
 - The skill was visible in the catalog but did not trigger when it would have helped. Tune the skill's description so future agents pick it up. Route as `tune description: <skill path>`.
 
-If a skill was neither invoked nor a missed-trigger candidate, drop it.
+If a skill was neither invoked nor a missed-trigger candidate, drop the skill edit. A lint-rule candidate may still be reported when the transcript shows a repeatable code violation in the current codebase, even if lint was not run in the session.
 
 Surface 3-5 durable learnings. For each:
 - Principle: one sentence naming the convention or technical fact. Concrete enough that a future agent recognizes when it applies.
