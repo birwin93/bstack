@@ -66,7 +66,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 - **Prove It Works** (**principle-prove-it-works**). After a task, before declaring done. Verify against the real artifact, not a proxy or "it compiles".
 - **Fix Root Causes** (**principle-fix-root-causes**). Debugging. Trace each symptom to its root cause, reproduce first, ask why until you reach it.
 - **Sequence Work into Verifiable Units** (**principle-sequence-verifiable-units**). Multi-step work (sweeps, migrations, runs of similar edits) and how you stack commits and PRs. Break work into small units that each end in a check, verify each before the next, and order delivery so the sequence proves itself.
-- **Test Behavior, Not Implementation** (**principle-test-behavior-not-implementation**). Writing, changing, or keeping a test. Call the code the way its users do and assert an independently expected result or observable effect. Check that a plausible defect makes the test fail.
+- **Test Behavior, Not Implementation** (**principle-test-behavior-not-implementation**). Writing, changing, reviewing, or auditing tests. Require a distinct contract, a plausible defect, and an owning boundary before adding or keeping coverage. Use its audit workflow for focused cleanup.
 
 **Delegation**
 
