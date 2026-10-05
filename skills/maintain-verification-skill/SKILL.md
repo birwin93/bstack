@@ -17,13 +17,13 @@ Pick one, and say which:
 
 ## Edit scope
 
-Only edit the verification skill's own directory (its SKILL.md, features/, and any harness scripts it owns). Never edit product code during a run: a behavior the map describes that the app no longer does is either doc drift (fix the map) or a product regression (report it, don't paper over it in docs).
+Only edit the verification skill's own directory (its SKILL.md, features/, references/, and any harness scripts it owns) and the reusable flow directory explicitly linked by that skill, such as top-level `verify-flows/`. Never edit product code during a run: a behavior the map describes that the app no longer does is either doc drift (fix the map) or a product regression (report it, don't paper over it in docs).
 
 ## Pass
 
-0. **Locate the target.** Find the verification skill to maintain: the project-local skill whose body has launch/drive sections and a feature map (usually `.agents/skills/verify-*/`). Several candidates → ask which one; none → stop and point at `/create-verification-skill` instead of inventing a target.
+0. **Locate the target.** Find the verification skill to maintain: the project-local skill with a feature map and launch/drive instructions, including linked execution references (usually `.agents/skills/verify/` or `.agents/skills/verify-*/`). Several candidates → ask which one; none → stop and point at `/create-verification-skill` instead of inventing a target.
 
-1. **Index hygiene.** Read the feature map README and glob its sibling files. Fix missing, extra, duplicate, or dead entries. Lightweight; no generated inventory.
+1. **Index hygiene.** Read the feature map README and glob its sibling files. Check any linked reusable flow inventory against its files and feature links. Fix missing, extra, duplicate, or dead entries. Lightweight; no generated inventory.
 
 2. **Source wave.** One read-only subagent per feature file, launched concurrently. Each explains "how does this user-facing feature work?" from source, flags likely doc drift with citations, and returns one concise live-verification recipe. Children never drive the app and never edit files. Return shape: feature summary / source entry points / likely drift or none / one recipe.
 
