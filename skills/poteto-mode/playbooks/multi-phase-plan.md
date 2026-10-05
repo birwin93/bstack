@@ -10,7 +10,7 @@
 6. Run `node skills/poteto-mode/scripts/check-plan.mjs <plan.md>` from the installed bstack root and fix every line it prints (the **encode-lessons-in-structure** principle skill).
 7. Hand back. Post the plan path and the script's output, then stop. Execution starts on the operator's explicit go, under the execution playbook the plan names.
 
-**Verification.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked (the **prove-it-works** principle skill). That sentence is the verification rule. Every verification block opens with it. The live block is mandatory. Ten lanes on `fast-code` at the PR head drive the real surface through its control skill, per the **swarm** skill. Each lane is one box with a concrete scenario, the screenshot it saves, and its pass predicate. One lane runs the same load-bearing scenario on trunk and head. If trunk lacks the feature, that lane records the absence and verifies the behavior the diff adds plus the end state the user waits for. The perf gate is dual-sided, so trunk and head must both produce the named metric. When trunk lacks the feature, isolate the work added by the diff and set absolute budgets for that work and the user-visible end state instead of comparing unlike scenarios. The perf block names the metric, the interleaved probe, the trunk baseline measured first, and the rule with the number that fails. A PR that changes an interaction is review-gated. The operator reviews it in chat with screenshots and a video before merge. A PR that changes no interaction writes `**Review gate.** None. <PR id> is not review-gated.` and no boxes under it.
+**Verification.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked (the **prove-it-works** principle skill). That sentence is the verification rule. Every verification block opens with it. The live block is mandatory. Ten lanes at the PR head drive the real surface through its control capability, per **swarm**. Fill in a supported semantic worker role from **bstack-runtime**, such as `deep-code`, and resolve its configured route without changing configuration. Queue lanes within runtime and host limits; ten lanes does not mean ten concurrent workers. Each lane is one box with a concrete scenario, the screenshot it saves, and its pass predicate. One lane runs the same load-bearing scenario on trunk and head. If trunk lacks the feature, that lane records the absence and verifies the behavior the diff adds plus the end state the user waits for. The perf gate is dual-sided, so trunk and head must both produce the named metric. When trunk lacks the feature, isolate the work added by the diff and set absolute budgets for that work and the user-visible end state instead of comparing unlike scenarios. The perf block names the metric, the interleaved probe, the trunk baseline measured first, and the rule with the number that fails. A PR that changes an interaction is review-gated. The operator reviews it in chat with screenshots and a video before merge. A PR that changes no interaction writes `**Review gate.** None. <PR id> is not review-gated.` and no boxes under it.
 
 **Control capability.** Pick it by surface from the capabilities the runtime actually exposes. Browser and web UIs need browser control, CLIs and TUIs need terminal control, and native mobile needs a simulator-driving capability. A PR that touches two surfaces gets lanes on both. A surface with no control capability is a risk in Appendix C, and its live block still names how each lane drives it.
 
@@ -39,13 +39,14 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] `git show origin/main:<control skill path>`
   - [ ] `skills/poteto-mode/playbooks/opening-a-pr.md`
   - [ ] `skills/<each other leaf skill the program uses>`
-- [ ] Arm the 30-minute audit tick through the runtime's schedule or wake capability. If unavailable, checkpoint durably and tell the operator that continuous monitoring is unavailable.
-- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook and the recorded objective. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by durable evidence only. Stand down a stuck lane and dispatch its replacement now. Then post a status message in the current task's chat with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers. Follow the host and operator's notification policy. For heartbeats, stay quiet when nothing actionable changed unless periodic status updates were requested."
-- [ ] On the operator's hold or stand-down, send every owner a zero-writes order at once.
+- [ ] Arm the hourly runtime audit through the runtime's schedule or wake capability. If unavailable, checkpoint durably and tell the operator that continuous monitoring is unavailable.
+- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from the current installed bstack root and the recorded objective. Audit both and fix drift. Probe every owner and child, inspect their decision and child trails, and judge durable progress. Apply Autopilot-full step 6 for stuck recovery and same-route retry limits. Expected runtime is evidence, not a kill deadline. Log the audit. Send a status message only for unreported changes under host and operator notification policy. Name new heads, rounds, verdicts, blockers, replacements, and decisions. Do not repeat unchanged tables unless periodic updates were requested."
+- [ ] On the operator's hold or stand-down, send every owner and child a zero-writes order at once and cancel future scheduled work.
 
 ### Spawn owners
 
-- [ ] Spawn one owner per PR with the full lifecycle the execution playbook names.
+- [ ] Assign one owner per PR with the full lifecycle the execution playbook names. Use fresh workers for new tasks, fix rounds, retries, and follow-ups under Poteto mode's worker lifecycle. Include the original brief, all later current-task directives, and prior report and branch. If delegation is unavailable or forbidden, run permitted work serially and report missing independent review.
+- [ ] Start the decision trail early and record child IDs, routes, expected runtimes and their basis, states, and durable evidence. Save each verifiable unit. Commit and push per-unit branch progress only when authorized.
 - [ ] Follow this dependency graph. Start dependent work only after its parent merges, or base it on the parent branch when the execution playbook stacks.
   - [ ] <PR id> and <PR id> are independent and first. Both branch from `main`.
   - [ ] <PR id> after <PR id>.
@@ -54,17 +55,18 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ### PR mechanics, for every PR
 
-- [ ] When PR publication is authorized, open the PR ready, never draft, through the repository's provider; use Graphite only when the repository uses it or the operator requested it.
+- [ ] Record the authorization boundary for commits, pushes, PR operations, branch rewriting, merge, and operator gates. Use built-in PR tooling when available for supported operations. Follow Opening a PR, including repository templates and user draft preferences. Tool availability does not grant authority.
 - [ ] Run the repo's lint and typecheck once before the PR-facing push. Push with hooks on.
 - [ ] Run the repository's diff-cleanup pass and **no-comments** before review.
 - [ ] Triage every Bugbot and security-reviewer comment per `../references/bugbot-triage.md`.
-- [ ] Rebase onto current trunk before babysit and again before the merge-ready report.
+- [ ] Follow the execution playbook's authorized topology owner. Full owners rebase before code-ready and babysit, retain the base during fix rounds unless conflict or trunk-caused CI failure requires movement, and rebase again at merge prep. Stack topology stays with the root. Rewriting a published branch requires explicit authority and a current remote-SHA lease.
 
 ### Verdict and merge, for every PR
 
-- [ ] At the merge-ready head SHA, run the swarm per `skills/swarm/SKILL.md`. One gates lane. The ten live lanes from the PR's **Verify, live** block. The perf lane from its **Verify, perf** block. One audit lane that reads the diff and the receipts and distrusts the PR body.
-- [ ] Clean only when every lane is `PASS`. Findings go back to the owner. A new head gets a fresh swarm and a fresh verdict.
-- [ ] <The merge or append rule from the execution playbook, with the patch-id rule from `playbooks/shipping.md`.>
+- [ ] At code-ready and every changed-patch round, run the swarm at the reported SHA per `skills/swarm/SKILL.md`. Include one gates lane, the ten live lanes, the relevant perf lane, and at least two focused audit lanes. Give each audit lane the full brief and a distinct focus. Audit final merge-ready or STACK-READY receipts before the verdict.
+- [ ] Clean only when every required lane is `PASS`. Send every proven issue, including notes, in one fix-forward. Require tests or repro receipts for defects at every affected site and carry them into the next review brief. Honor configured review-round limits.
+- [ ] Apply `skills/poteto-mode/playbooks/shipping.md#verification-reuse` to verdict and lane reuse. Keep exact SHA, patch-id, build, configuration, and output evidence. CI and mergeability run fresh.
+- [ ] <The exact merge or append grant, operator gates, and done condition from the execution playbook.>
 
 ### Boot recipe, for every live lane
 
@@ -97,7 +99,7 @@ Each live lane runs in its own isolated environment at the PR head. Drive throug
 
 - [ ] <Test file and the case it gains.> Run `<command>`.
 
-**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `fast-code` at the PR head, per the boot recipe.
+**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `<semantic worker role>` at the PR head, per the boot recipe.
 
 - [ ] Lane 1. Regression against trunk. Run <the same load-bearing scenario> at trunk and head. If trunk lacks the feature, record that and verify <the behavior the diff adds plus the end state the user waits for>. Save `<slug>.png`. Pass when <predicate>.
 - [ ] Lane 2. <Scenario.> Save `<slug>.png`. Pass when <predicate>.
@@ -127,7 +129,7 @@ Each live lane runs in its own isolated environment at the PR head. Drive throug
 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Bugbot triage done.
-- [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
+- [ ] Apply Shipping's verification reuse rule after the authorized rebase, then pass current-head CI and current merge checks.
 - [ ] <The owner squash-merges its own PR, or the root appends the PR to the Graphite stack and the operator lands it.>
 
 ## Close the program

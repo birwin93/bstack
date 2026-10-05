@@ -29,6 +29,7 @@ Remaining triggers:
 - Docs, RFCs, readmes, PR descriptions, or commit messages → the **technical-writing** skill.
 - Before an authorized commit → run the available diff-cleanup and **no-comments** workflows. Missing optional cleanup skills are a reported gap, not permission to install another package.
 - Shipping UI / IDE / CLI → use the matching real control or verification capability discovered by **bstack-runtime**. For bug fixes, reproduce first on the same surface yourself. Hand to the user only under the narrow Bug fix step 1 exception.
+- Running a benchmark, measuring performance, or reporting a measured speedup or regression → read **benchmark-checklist** before reporting or acting on the number.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and "check on PR X". Never trigger it merely because another playbook produced local code. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
 - Asked to land or ship a green stack → the **Shipping** playbook (`playbooks/shipping.md`). Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - Bugbot or the agentic security review commented → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so assess each on its merits and dismiss noise with a concrete reason instead of churning code. Triage fix / dismiss / ask per `references/bugbot-triage.md`.
@@ -67,6 +68,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 - **Fix Root Causes** (**principle-fix-root-causes**). Debugging. Trace each symptom to its root cause, reproduce first, ask why until you reach it.
 - **Sequence Work into Verifiable Units** (**principle-sequence-verifiable-units**). Multi-step work (sweeps, migrations, runs of similar edits) and how you stack commits and PRs. Break work into small units that each end in a check, verify each before the next, and order delivery so the sequence proves itself.
 - **Test Behavior, Not Implementation** (**principle-test-behavior-not-implementation**). Writing, changing, reviewing, or auditing tests. Require a distinct contract, a plausible defect, and an owning boundary before adding or keeping coverage. Use its audit workflow for focused cleanup.
+- **Explain the Number** (**principle-explain-the-number**). Before trusting, reporting, or acting on a measured number. Find what limits it and rule out measuring different work.
 
 **Delegation**
 
@@ -79,7 +81,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Autonomy
 
-**Drive authorized work.** Inspect, edit, test, and verify inside the requested scope without seeking confirmation for ordinary reversible implementation steps.
+**Drive authorized work.** Inspect, edit, test, and verify inside the requested scope without seeking confirmation for ordinary reversible implementation steps. For decisions covered by an autonomy grant, choose, act, and report the choice. Explain any preference default and how the operator can change it in plain words. Do not ask for a reply token or repeat an approval already granted. Operator gates and security approvals still apply. A default cannot supply missing authority.
 
 **External writes are separate authority.** Follow **bstack-runtime** immediately before commits, pushes, pull requests, merges, deploys, ticket or chat updates, production changes, data deletion, and customer communication. A step appearing in a playbook does not authorize it.
 
@@ -93,7 +95,13 @@ Use the delegation capability resolved by **bstack-runtime**. Every code-writing
 
 Model roles come from **bstack-runtime**. Use `fast-code` for narrow mechanical work, `deep-code` for precisely specified difficult work, `judgment` for architecture and synthesis, and `critic` for independent review. `auto` inherits the parent model. Never place a provider model slug in a shared playbook.
 
-You own every worker's work. Review the actual diff or artifact and write your own summary. Start a fresh worker with consolidated scope when a resume mechanism cannot guarantee delivery of new instructions. A second opinion is the same evidence and rubric evaluated independently. Agreement is useful only when the reviewers did not share reasoning.
+Start a fresh worker for each new task, fix round, retry, follow-up, or queue item. Each brief consolidates the original assignment, every later directive from the current task, and the prior report and branch. Include preserved artifacts, remaining work, and the retry count. Read only current-task history through the runtime; name unavailable history instead of inventing it.
+
+Reuse a worker only when the work strictly needs costly unique state in its checkout, uncommitted changes, or live process. Record the reason. A logical PR owner survives its agent; a fresh agent takes the next round after it returns. Stop and hold messages are not reuse. Never rely on interrupt-chained resumes to deliver revised instructions.
+
+Honor runtime and host limits. When delegation is unavailable or forbidden, do permitted work serially and report missing independent review. Explicit CLI failures still follow the runtime recovery rule, with four attempts total on the same configured route per assignment. Fresh workers do not reset that budget or permit route substitution.
+
+You own every worker's work. Review the actual diff or artifact and write your own summary. A second opinion is the same evidence and rubric evaluated independently. Agreement is useful only when the reviewers did not share reasoning.
 
 ## Writing the reply
 
@@ -135,7 +143,7 @@ A large or cross-cutting effort (a migration across many call sites, an ambitiou
 - **Shipping.** The half after Babysit. Independently verifying a green stack, then landing the contiguous verified run from the bottom through the repository's stack mechanism. `playbooks/shipping.md`.
 - **Autonomous run.** A long task to drive to completion without stopping ("run until done", "/loop until X"). `playbooks/autonomous-run.md`.
 - **Orchestrate.** A standing project handed to one coordinator chat: multi-day, many stacked PRs, dozens to hundreds of subagents, minimal human turns ("run this whole project", "own this migration until it lands"). Distinct from Autonomous run, which drives one task to a predicate. Work one agent could finish inside the session's budget routes there, not here, however program-shaped the phrasing sounds. `playbooks/orchestrate.md`.
-- **Autopilot-full.** A queue of independent PRs run to merged with full autonomy. One owner per PR carries build through merge, and the root swarm-verifies each merge-ready head before its owner merges ("autopilot this queue", "full autopilot", one-owner-per-PR programs). `playbooks/autopilot-full.md`.
+- **Autopilot-full.** A queue of independent PRs run to merged with full autonomy. One owner per PR carries build through merge, and the root swarm-verifies every code-ready and changed-patch round before its owner merges ("autopilot this queue", "full autopilot", one-owner-per-PR programs). `playbooks/autopilot-full.md`.
 - **Autopilot-stack.** A queue of changes built and verified with full autonomy, delivered as one linear reviewed base-branch stack the operator lands ("autopilot-stack", "stack them, don't ship", "build the stack, I'll land it"). `playbooks/autopilot-stack.md`.
 - **Session pickup.** Resuming or taking over a prior agent's in-flight work from a transcript, cloud-agent URL, or pushed branch. `playbooks/session-pickup.md`.
 - **Pause safely.** Suspending in-flight work cleanly so it can be resumed, on an explicit pause, going offline, a client restart, or imminent context compaction. The complement to Session pickup. Full steps: `playbooks/pause-safely.md`.

@@ -37,6 +37,43 @@ MIT license in [LICENSE](LICENSE).
 - `bstack.example.yaml` documents optional configuration.
 - `scripts/validate_skills.py` validates the portable skill bundle.
 
+## Validate measurements and prevent repeated mistakes
+
+[Benchmark checklist](skills/benchmark-checklist/SKILL.md) vets a measured
+baseline or speedup before it guides a decision. It checks the limiter,
+production tuning, physical limits, errors, completed work, repeated
+interleaved trials, and end-to-end relevance. The
+[explain-the-number principle](skills/principle-explain-the-number/SKILL.md)
+requires evidence that a number means what the report claims. A requested
+ballpark can use one labeled run, with errors and completed work still checked.
+
+[Correct](skills/correct/SKILL.md) finds repeated mistakes in authorized
+repository and current-task evidence. It prefers architecture, then types,
+lint or CI, behavior tests, and finally docs. Each enforcement check must reject
+a past defect and accept a legitimate case. A scoped rule table records the
+owner and check. Local implementation authority carries forward. Publication,
+security changes, and broad CI policy changes need their own authority.
+
+[Architect](skills/architect/SKILL.md) screens designs for split ownership,
+duplicate supported paths, importable internals, and hand-synced lists. The
+preferred design makes a locally sensible edit safe across the repository.
+
+## Verify autonomous work in rounds
+
+[Autopilot-full](skills/poteto-mode/playbooks/autopilot-full.md) assigns an owner
+to each independent change. Root verification starts at the code-ready head,
+then repeats when a fix changes the patch. A clean verdict applies only to the
+verified patch. Merge-ready also requires the playbook's review and CI gates
+and explicit merge authority. [Autopilot-stack](skills/poteto-mode/playbooks/autopilot-stack.md)
+uses verification rounds for a linear stack that the operator lands.
+
+Both workflows retain the runtime's model roles, panel and review-round limits,
+and authorization rules. Unavailable native delegation uses the supported
+local fallback and reports missing independent review. Required independent
+verification remains a gate. Explicit executor failures follow the runtime
+recovery rule.
+A workflow name or clean verdict never grants publication authority.
+
 ## Development
 
 Run validation from the repository root:

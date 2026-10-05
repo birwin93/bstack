@@ -24,21 +24,21 @@ Open a todolist with one entry per phase before launching anything.
 2. Choose the shape. Partition into slices, race N workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.
 3. Load **bstack-runtime**. Set N from the user or derive it from the shape, then cap active workers at `max-parallel` and queue any remainder.
 4. Pick a semantic model role. Default to `fast-code`. For a model race, name each arm's role up front and resolve it through the runtime.
-5. Give each worker its own writable output when it writes.
+5. Give each worker its own writable output when it writes. Verification briefs name the exact SHAs. Measurement briefs also name the sample count, what one sample measures, and the execution order. Require those SHAs and that method in the result.
 
 ## Phase B: Fan out
 
-Start independent workers through the runtime's parallel delegation capability. Give each the **poteto-worker** contract, configured semantic role, and only the environment and tool access its slice needs. Run them serially when delegation is unavailable.
+Start independent workers through the runtime's parallel delegation capability. Give each the **poteto-worker** contract, configured semantic role, and only the environment and tool access its slice needs. Run permitted lanes serially when delegation is unavailable or forbidden. Report any unmet independence requirement. Use fresh workers under [Poteto mode's worker lifecycle](../poteto-mode/SKILL.md#subagents).
 
 When a worker needs a non-default branch or environment, resolve it explicitly from current repository state. Do not require a push merely to make delegation convenient.
 
-Every brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence.
+Every brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence. A proven defect makes the result `ISSUES`. Report every proven issue, including notes, rather than stopping at the first.
 
-If an explicit `claude` or `codex` worker route fails, apply the runtime's [recovery rule](../bstack-runtime/SKILL.md#recover-explicit-executor-failures), including up to three retries for recoverable errors. For an `auto` worker dropout, proceed with N-1 and note it.
+If an explicit `claude` or `codex` worker route fails, apply the runtime's [recovery rule](../bstack-runtime/SKILL.md#recover-explicit-executor-failures), including three retries after the initial attempt, four attempts total on the same route. For an `auto` worker dropout, proceed with N-1 and note it.
 
 ## Phase C: Aggregate
 
-Read the terminal results. For coverage, every required slice needs a result. For a race, apply the selection rule declared up front. Use first pass, rank all, or best-of. Do not paste raw worker dumps.
+Read the terminal results. Reject a completed result missing the exact SHAs or method required by its brief. Give one fresh replacement the consolidated brief and prior report. A second metadata miss remains an explicit gap, never a pass. This correction does not replace or reset the runtime's explicit CLI failure policy. For coverage, every required slice needs a result. For a race, apply the selection rule declared up front. Use first pass, rank all, or best-of. Do not paste raw worker dumps.
 
 Keep a compact result table, one-line evidenced issues, and explicit gaps or dropouts.
 

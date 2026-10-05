@@ -29,12 +29,14 @@ permission to install another package or widen scope.
 **Description.** Write a briefing a reviewer can read in under a minute. Explain
 why the change exists, what behavior changes, and how you verified it. Aim for
 about 40 lines or fewer, while honoring the repository template and retaining
-material evidence and limitations. Include only sections that carry information:
+material evidence and limitations. Use `##` headings for the following sections in order, except where the repository template requires otherwise. Include only sections that carry information:
 
-- `## Why` for intent and approach in one or two short paragraphs. Omit SHA
-  histories and rebase details.
-- `## Scope` for changed behavior, real symbols, and paths. Name both sides of
-  a rename. State boundaries when they matter. Avoid a file-by-file essay.
+- `## Why` for the problem and approach in one to three short sentences. Omit
+  SHA histories and rebase details.
+- `## What changed` for one to three short bullets about the concrete changes.
+  Name real symbols or paths when useful, including both sides of a rename.
+- `## Scope` for boundaries, known gaps, or related work deliberately left out.
+  Keep it separate from the change list and avoid a file-by-file essay.
 - `## Tradeoffs` for alternatives a reviewer would otherwise ask about.
 - `## Blast Radius` for affected consumers and risk in one to three sentences.
 - `## Verification` for each real run path and outcome. For performance work,
@@ -45,6 +47,11 @@ Link detailed logs, experiment tables, and review artifacts instead of copying
 them into the body. Attach screenshots or recordings when they prove a claim.
 Never claim verification that was not run.
 
+**PR tooling.** Prefer a built-in PR capability when the host provides it for
+creation, editing, retargeting, or marking ready. Follow its supported schema.
+Use the repository's forge tooling for operations it does not cover or when no
+built-in capability is available. Tool availability never grants authority.
+
 **Stacks.** Use Graphite or another stack tool only when the repository already
 uses it and the user requested or accepted stacked delivery. Verify parentage
 before submitting. Otherwise use the repository's normal branch workflow.
@@ -54,7 +61,12 @@ repository requires drafts. Re-read the created pull request and verify its
 head SHA, base, title, body, and state before reporting success.
 
 **Monitoring.** Opening a pull request does not authorize babysitting, merging,
-or deployment. Run those playbooks only when requested.
+or deployment. Return the URL to the parent and continue the assigned work.
+An Autopilot-full or Autopilot-stack owner whose brief explicitly assigns the
+babysit loop starts that loop after its code-ready report. It reports merge-ready
+or STACK-READY under that playbook. Ordinary PR work still waits for a monitoring
+request. Reused verification follows [Shipping's rule](shipping.md#verification-reuse);
+opening or updating a PR does not make old evidence current.
 
 **Reply:** pull request URL, head and base, commits published, verification,
 and any remaining risk or follow-up.

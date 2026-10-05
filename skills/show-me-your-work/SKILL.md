@@ -7,7 +7,7 @@ metadata:
 
 # Show me your work
 
-Keep one canonical log.
+Keep one canonical log per run. Each run has one writer.
 
 ## The format
 
@@ -22,7 +22,7 @@ Copy `references/decision-log-template.tsv` (the header row) to start a clean lo
 - **evidence.** A link or path that proves it: commit SHA, PR number, `file:line`, or an artifact, trace, or screenshot path. Never a paragraph.
 - **result.** The outcome or predicate state: `tests green`, `reverted`, `pixel-diff 0`, `INCONCLUSIVE`, `open`.
 
-An example, plain-spoken so a reviewer reads it at a glance. This is illustration only. Don't copy these rows into a real log.
+An example, plain-spoken so a reviewer reads it at a glance.
 
 ```
 ts	phase	decision	why	evidence	result
@@ -40,28 +40,51 @@ Use the helper `scripts/log.sh <logfile> <phase> <decision> <why> <evidence> <re
 
 Log decision points and checkpoints, not every action: a fork chosen, a unit completed with its verification result, a pivot or revert with its trigger, a blocker surfaced, a gate fixed. For loop runs, one row per iteration. Skip the trivial and self-evident.
 
+A run is one agent conversation, including later turns and summaries. A pickup,
+replacement agent, or new chat starts a new run with a unique agent or task ID.
+Choose `.audit/<task-slug>/<run-id>.tsv` before the first write and keep that
+path across turns. Only that run writes that file. Its first row has phase
+`start`; use `start` for nothing else. Name the run in that row's evidence.
+
+Never let concurrent runs append to the same file. Start rows cannot establish
+ownership when writes interleave. A replacement starts its own file and links
+the previous run's log in its start evidence. Preserve an existing shared or
+legacy log as historical evidence; do not claim its rows belong to this run.
+If a task needs a combined view, one designated writer may build a separate
+index linking each run's source log. Audit the source logs, not inferred
+segments in the combined view.
+
 ## Where it lives
 
-By default the log is a working artifact, not committed. Keep it at `decisions.tsv` in the work dir, or `.audit/<task-slug>.tsv` when several efforts run at once, and leave it out of git.
+By default the log is a working artifact, not committed. Keep it at `.audit/<task-slug>/<run-id>.tsv` and leave it out of git. A private `decisions.tsv` in an isolated work directory is also valid when exactly one run owns it; a replacement must use a new path.
 
 Commit it only when the work is ambitious enough that a reviewer needs the trail to trust the result.
 
 ## Rules
 
-- One row is one decision or checkpoint.
 - Append-only. A wrong call gets a new row that supersedes it. Never edit or delete history.
 - Prefer evidence produced by committed scripts over hand-made one-offs (the **encode-lessons-in-structure** principle skill).
 
 ## Audit the log against the transcript
 
-At the end of the run, load **bstack-runtime** and use its current-task `history` capability to check that the log told the truth. If history is unavailable, audit against the visible conversation and direct artifacts. Never scan unrelated projects or conversations.
+At the end of the run, load **bstack-runtime** and use its current-task
+`history` capability to check this run's rows against what happened. If history
+is unavailable, use the visible conversation and direct artifacts. Never scan
+unrelated projects or conversations.
 
-- Every row maps to a real action. Cut invented or aspirational entries.
-- Each row's evidence resolves and shows what the row claims.
-- A fork, pivot, or abandoned approach that shaped the work but isn't logged is a gap. Add it.
-- Drop padding.
+Select the file owned by this run and verify its `start` evidence identifies
+this conversation. Do not infer ownership from adjacent rows in a shared log.
 
-Fix the log, not the story. If the work diverged from what a row claims, the row is wrong.
+- Check that every row maps to a real decision or action.
+- Check that each evidence pointer resolves and supports its claim.
+- Append missing forks, pivots, or abandoned approaches that shaped the work.
+
+Correct the log, not the story. Never edit or remove a row, even an invented
+one. Append a correction that points to the wrong row by its timestamp and run,
+states what happened, and provides real evidence. Audit only this run's file.
+If this run's work shows a row in another run's log is wrong, append the
+correction to this run's own file and link the other file, timestamp, and run.
+Never write into another run's log.
 
 ## Cross-model review of the trail
 

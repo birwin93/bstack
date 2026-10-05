@@ -31,11 +31,11 @@ Skip Phase A only when the work is genuinely greenfield with no surrounding syst
 
 Run the **arena** skill with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt. Each candidate produces a design package shaped per `references/rationale-template.md`.
 
-Resolve architect runner roles through **bstack-runtime**. Default to the configured panel size using `judgment` and `deep-code` first.
+Resolve architect runner roles and bounds through **bstack-runtime**. Default to the configured panel size using `judgment` and `deep-code` first. When native delegation is unavailable or disallowed, develop the candidates serially and report the missing independent perspectives. Explicit-route failures follow the runtime recovery rule.
 
 Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.
 
-Screen every candidate against [`references/design-red-flags.md`](references/design-red-flags.md) before synthesis. Reject or revise shallow modules, information leakage, temporal decomposition, and pass-through methods.
+Screen every candidate against [`references/design-red-flags.md`](references/design-red-flags.md) before synthesis. Assume the next contributor sees only the files it opened, copies the nearest example, and takes the shortest path that compiles. Prefer a design where a change that looks right from one file is safe across the repository. Revise or reject candidates with split ownership, duplicate supported paths, importable internals, or hand-synced lists before synthesis.
 
 Compare viable candidates on interface depth. Prefer the design that hides more complexity behind a smaller, simpler public surface. A rich interface can keep call chains short by concentrating capability instead of scattering it across layers.
 

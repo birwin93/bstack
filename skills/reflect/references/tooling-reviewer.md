@@ -44,7 +44,7 @@ Two valid finding shapes:
 
 If a skill was neither invoked nor a missed-trigger candidate, drop the skill edit. A lint-rule candidate may still be reported when the transcript shows a repeatable code violation in the current codebase, even if lint was not run in the session.
 
-Surface 3-5 durable learnings. For each:
+List each durable learning you find. For each:
 - Principle: one sentence naming the convention or technical fact. Concrete enough that a future agent recognizes when it applies.
 - Evidence: the exact moment in the transcript (turn number or short quote, including the command or flag).
 - Routing: most relevant existing skill (give the `SKILL.md` path as it appears in the transcript), OR `tune description: <skill path>` when the skill should have triggered but didn't, OR "new skill: <kebab-name>".

@@ -39,6 +39,15 @@ Map these semantic roles:
 - `judgment` for architecture and synthesis.
 - `critic` for independent review.
 
+Read existing configuration before proposing changes. Compare keys under
+`models` with these supported roles. Report unsupported keys with their source
+path and current value. Do not assume an unknown key is safe to delete or map
+it to a supported role without evidence. Show any proposed migration as a diff
+and apply it only with explicit authorization for that migration. Keep existing
+keys until then, including unsupported and unrelated keys. Preserve supported
+routes, model identifiers, reasoning, limits, and authorization settings unless
+the user explicitly requests their change. A repeated setup run is not a reset.
+
 For cross-CLI routing, write version 2 structured entries:
 
 ```yaml
@@ -156,8 +165,10 @@ actions, deployments, customer messages, or data deletion.
 
 ## Write idempotently
 
-Read any existing configuration, preserve unrelated supported keys, and write
-the complete resulting YAML once. Validate role names, positive integer
-limits, authorization values, and configured reasoning levels supported by
-each model/executor combination. Re-read the file and summarize the effective
-scope, models, reasoning levels, limits, and publication policy.
+Read any existing configuration, preserve unrelated keys and unapproved role
+migrations, and write only the authorized changes. Validate changed role names,
+positive integer limits, authorization values, and configured reasoning levels
+supported by each model/executor combination. Report existing unsupported keys
+without silently deleting them. Re-read the file and summarize the effective
+scope, models, reasoning levels, limits, and publication policy. Separately
+report proposed, applied, and unresolved migrations.
