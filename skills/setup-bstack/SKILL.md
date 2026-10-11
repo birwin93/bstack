@@ -2,7 +2,7 @@
 name: setup-bstack
 description: Configure bstack model roles, reasoning levels, fan-out limits, and authorization defaults for a user or repository. Use when the user asks to set up bstack, change Poteto Mode models or reasoning, choose a reasoning budget, or tune its execution limits.
 metadata:
-  compatibility: Requires file access. Model and reasoning enumeration are optional. Unavailable catalogs fall back to auto.
+  compatibility: Requires file access. Model and reasoning enumeration are optional. Unavailable catalogs leave requested explicit changes unresolved; inherited/default choices remain valid.
 ---
 
 # Setup bstack
@@ -91,16 +91,24 @@ already chose one:
 | Preset | Reasoning target |
 | --- | --- |
 | Keep current/default | Preserve every role's current effort or inheritance. |
+| Highest supported | Raise explicit efforts to each model/executor's confirmed maximum. |
 | Large | At most `xhigh`. |
 | Medium | At most `high`. |
 | Small | At most `medium`. |
 
-Recommend Small when the user prioritizes usage. These are reasoning ceilings
-for configured roles, not token, spending, or subscription caps. They do not
+Recommend Small when the user prioritizes usage. Large, Medium and Small are
+reasoning ceilings; Highest supported is an explicit choice to raise effort.
+These choices are not token, spending or subscription caps. They do not
 change the parent chat's settings, scheduled jobs, or other tools' model choices.
 
-Apply the selected ceiling to explicit reasoning values. Preserve lower
-confirmed efforts, model identifiers, executors, and unrelated settings.
+For Highest supported, resolve the maximum from each selected model/executor's
+confirmed catalog and raise its explicit reasoning value to that maximum.
+Different providers may have different maxima. Never assume a value named
+`max` exists. Missing catalogs leave changed values unresolved in the preview.
+This choice does not make inherited roles explicit.
+
+For Large, Medium or Small, apply the selected ceiling to explicit reasoning
+values. Preserve lower confirmed efforts, model identifiers, executors, and unrelated settings.
 Resolve the highest supported effort at or below the ceiling for each selected
 model/executor using its confirmed catalog. Never rewrite a model slug to encode
 effort or use the native host's catalog for a different CLI. If the catalog is
@@ -112,8 +120,9 @@ even with a fixed model. Missing roles and version 1 scalar roles stay inherited
 unless the user explicitly chooses reasoning for them. If no role would change,
 say so; do not claim that choosing Small reduced usage. Offer explicit reasoning
 for inherited roles only when the model and supported effort can be confirmed.
-For a newly configured explicit reasoning value, use the chosen ceiling unless
-the user specifies a lower supported effort. Keep current/default never restores
+For a newly configured explicit effort, use the chosen ceiling, or the
+confirmed maximum under Highest supported, unless the user chooses a lower
+supported effort. Keep current/default never restores
 an earlier higher effort. Raising reasoning requires an explicit user choice.
 
 Show the resulting role table, including executor, model, reasoning, inherited
@@ -123,6 +132,11 @@ without asking again; ask only for missing choices.
 
 When saving, replace the existing budget comment with one line such as
 `# reasoning-budget: small (ceiling medium; inherited roles unchanged)`.
+For Highest supported, use the single-line comment:
+
+```yaml
+# reasoning-budget: highest-supported (confirmed per-role maxima; inherited roles unchanged)
+```
 Write effective values in the existing per-role `reasoning` fields; do not add
 a runtime configuration key. Keep current/default retains the previous comment
 when it still describes the settings, otherwise label the result custom.

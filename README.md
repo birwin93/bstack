@@ -74,6 +74,24 @@ verification remains a gate. Explicit executor failures follow the runtime
 recovery rule.
 A workflow name or clean verdict never grants publication authority.
 
+## Start a task or get help
+
+Start with [Poteto Mode](skills/poteto-mode/SKILL.md), a goal and a check that
+can pass or fail. The [bstack guide](docs/guide/README.md) walks through setup,
+prompting, design, verification and autonomous runs.
+
+[Poteto help](skills/poteto-help/SKILL.md) answers setup and workflow questions
+and gives you a prompt to send. It runs only when explicitly invoked. For a
+catch-up on this chat, [ketchup](skills/ketchup/SKILL.md) checks current status
+and explains decisions waiting on you. [Recall](skills/recall/SKILL.md) rebuilds
+context across your recent work on a topic; [bro](skills/bro/SKILL.md) rewrites
+only the last reply.
+
+```text
+/poteto-help which skill should I use to review this branch?
+/ketchup
+```
+
 ## Development
 
 Run validation from the repository root:
@@ -97,13 +115,18 @@ development checkout current as this repository changes.
 
 After installation, run [setup-bstack](skills/setup-bstack/SKILL.md) to choose
 personal or repository settings for models, reasoning, and agent counts. Setup
-shows the current roles and offers Keep current/default, Large, Medium, and
-Small reasoning presets. No configuration is required for the defaults.
+shows current roles and offers Keep current/default, Highest supported, Large,
+Medium and Small reasoning presets. Highest supported raises explicit efforts
+to each model/executor's confirmed maximum; inherited roles stay inherited. No configuration is required for the defaults.
 
 For lower usage, start with Small, which caps explicit role reasoning at medium
 while preserving lower efforts, model choices, and inherited settings. Setup
 checks supported efforts and shows which roles would actually change. It also
-shows panel size and review rounds, which control repeated agent work. The
+shows panel size and review rounds, which control repeated agent work.
+
+A saved configuration keeps its explicit model and reasoning choices when
+host defaults change. Delete only the override you intend to reset, or use setup
+to change it; a rerun does not reset existing settings. The
 preset is not a token or subscription cap and does not change the parent chat
 or independently configured jobs. See the
 [budget rules](skills/setup-bstack/SKILL.md#choose-a-reasoning-budget).

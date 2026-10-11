@@ -7,48 +7,27 @@ metadata:
 
 # How
 
-Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
+Explain how the code works at the level of an engineer onboarding onto the subsystem. Build a working mental model rather than annotating every source line.
 
-## Step 1. Assess Complexity
+Load **bstack-runtime** before choosing roles or delegating. Use read-only access and configured limits. When delegation is unavailable or disallowed, explore and explain serially. Explicit-route failures follow the runtime recovery rule.
 
-Load **bstack-runtime** before choosing models or delegating. Use its read-only contract and configured limits. When delegation is unavailable, explore and explain serially.
+## 1. Assess complexity
 
-If the scope is ambiguous, state your interpretation and explore. The user can redirect.
+If scope is ambiguous, state your interpretation and explore. The user can redirect.
 
-- **Simple** (a single module, a small utility, a narrow question such as "how does function X work"): no explorers. One explainer explores and explains in a single pass. Go to Step 2b.
-- **Complex** (a subsystem spanning multiple files or services, a cross-cutting feature, a full architectural overview): spawn parallel explorers first, then hand off to the explainer. Go to Step 2a.
+- Simple, such as one module or a narrow function question: one `judgment` explainer explores and explains in a pass, or do it directly. Use `references/explainer-prompt.md` without explorer findings, then go to step 4.
+- Complex, such as a subsystem across files or services: go to step 2.
 
 When in doubt, take the simple path.
 
-## Step 2a. Explore (complex questions only)
+## 2. Explore, complex only
 
-Decompose the question into 2 to 4 exploration angles, each a distinct slice of the subsystem. Start the explorers through the runtime, bounded by `max-parallel`:
+Split the question into 2 to 4 distinct angles. Give each read-only `fast-code` explorer its angle, repository paths and `references/explorer-prompt.md`. Start independent explorers through the runtime within `max-parallel`, or explore the angles serially.
 
-- Model role: `fast-code`.
-- Scope: one named exploration angle and the relevant repository paths.
+## 3. Synthesize, complex only
 
-Each explorer gets the prompt in `references/explorer-prompt.md` with its angle filled in. Then go to Step 3.
+After every explorer returns, give one read-only `judgment` explainer `references/explainer-prompt.md` with all findings. Synthesize directly when delegation is unavailable.
 
-## Step 2b. Direct Explain (simple questions)
+## 4. Present
 
-Start one read-only worker that explores and explains in one pass, or do the pass directly:
-
-- Model role: `judgment`.
-
-Build its prompt from `references/explainer-prompt.md` without the explorer-findings section. Go to Step 4.
-
-## Step 3. Synthesize (complex questions only)
-
-Once all explorers have returned, start one read-only worker to synthesize their findings into one explanation, or synthesize directly:
-
-- Model role: `judgment`.
-
-Build its prompt from `references/explainer-prompt.md` with every explorer's findings filled in.
-
-## Step 4. Present
-
-Present the explainer's output to the user. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.
-
-## Output Format
-
-The explanation uses the sections defined in `references/explainer-prompt.md`, dropping any that do not apply: Overview, Key Concepts, How It Works, Where Things Live, Gotchas.
+Present the explanation with light edits for clarity or conversation context. Do not substantially rewrite it. Use the applicable sections in `references/explainer-prompt.md`: Overview, Key Concepts, How It Works, Where Things Live, Gotchas.

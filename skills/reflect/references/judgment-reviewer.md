@@ -17,11 +17,7 @@ Scan for:
 
 ## Scope to skills and tools the session actually used
 
-Findings must point to skills, tools, or MCPs invoked in this transcript. Speculative routings to skills the parent never opened do not count. To check whether a skill was used, scan the transcript for:
-
-- File reads against any `SKILL.md` exposed in repository, personal, system, or plugin skill locations
-- Delegated worker prompts that name a skill path
-- Tool calls (Shell, Grep, MCP, etc.) that match a skill's documented commands
+Route only to skills, tools or connected sources the transcript used. Evidence is a file read of a skill in a repository, personal, system or plugin location, a worker prompt naming the path, or a tool call matching its documented commands. A skill visible in the catalog but missed is a description-tuning candidate. Drop other speculative skill routings.
 
 Two valid finding shapes:
 

@@ -7,63 +7,46 @@ metadata:
 
 # Reflect
 
-Mine the current conversation for durable learnings, then route them to the strongest practical enforcement in the relevant codebase.
+Mine this task for durable lessons and propose their strongest practical enforcement. Use only when the user asks to reflect or capture a reusable lesson. Skip trivial, unrelated or one-off lessons. Reject duplicate skill prose; an already-written rule can still need structural enforcement when the transcript shows a repeatable violation. Reject a lint candidate only when an effective mechanism already covers it.
 
-## When to invoke
+## 1. Locate the active history
 
-- The user said "reflect" or "/reflect".
-- The user explicitly asks to capture a recipe, correction, or reusable workflow from the current task.
+Load **bstack-runtime** for this task's completed history. Without that capability, pass a tight digest of the visible conversation. Never scan other projects or conversations.
 
-Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
+## 2. Review
 
-## Process
+Start up to three read-only reviewers within `panel-size` and `max-parallel`, or apply the lenses serially when delegation is unavailable. Give each the current history and only the connected evidence needed to check a cited item. Explicit-route failures follow the runtime recovery rule.
 
-### 1. Locate the active transcript
+| Lens | Semantic role | Prompt |
+| --- | --- | --- |
+| Judgment | `judgment` | `references/judgment-reviewer.md` |
+| Tooling | `deep-code` | `references/tooling-reviewer.md` |
+| Divergent | `judgment` | `references/divergent-reviewer.md` |
 
-Load **bstack-runtime** and request only the current task's completed history. If the host cannot provide it, write a tight digest from the visible conversation and pass that instead. Never scan unrelated projects or conversations.
+Use each template with the history reference or digest. The parent applies approved edits.
 
-### 2. Spawn three reviewers in parallel
+## 3. Synthesize
 
-Start up to three read-only reviewers through the runtime, bounded by `panel-size` and `max-parallel`. Give them access only to the current-task history and connected evidence needed to verify an existing citation. The parent applies approved edits.
+Give one read-only `judgment` synthesizer `references/synthesizer.md` and all findings, or synthesize directly when delegation is unavailable. Return Accepted / Rejected / Backlog.
 
-| Lens | `model` | Prompt template |
-|---|---|---|
-| Judgment | your configured reflect-judgment model (default `judgment`) | `references/judgment-reviewer.md` |
-| Tooling | your configured reflect-tooling model (default `deep-code`) | `references/tooling-reviewer.md` |
-| Divergent | your configured reflect-judgment model (default `judgment`) | `references/divergent-reviewer.md` |
+## 4. Check structural enforcement
 
-Pass each template verbatim, substituting the current-task history reference or digest where marked. Reviewers return findings through the host's worker result channel.
+For repeatable code practices, inspect the codebase's lint rules, configuration and lint entry point. Prefer an existing or scoped new rule with useful signal. An Accepted lint proposal names the practice, codebase, rule, diagnostic, enforcement scope and checks for a violation and a valid case. Preserve the existing rollout; do not add hooks, CI or default lint enforcement silently.
 
-### 3. Synthesize
+Reject duplicate enforcement. Put promising but unproven mechanisms in Backlog with the next investigation step. Use skill prose for judgment a mechanism cannot check. See **encode-lessons-in-structure**.
 
-Start one read-only synthesizer through the runtime using the `judgment` role, or synthesize directly when delegation is unavailable. Use `references/synthesizer.md` with each reviewer's output. The synthesizer returns a structured Accepted / Rejected / Backlog list.
+## 5. Apply approved changes
 
-### 4. Structural enforcement check
+Present the full Accepted / Rejected / Backlog output before applying edits. The user chooses the subset and routing. Do not auto-apply. File backlog items only with explicit tracker-write authorization.
 
-Sanity-check the synthesizer's Accepted list against the relevant codebase. For a repeatable code practice, inspect existing lint rules, configuration, and how lint is run. Prefer an existing rule or a scoped new rule when it can detect the violation with useful signal. An Accepted lint proposal must name the practice, target codebase, proposed rule and diagnostic, enforcement scope, and a way to verify a violation and a valid case. Preserve the codebase's current lint rollout; do not silently add a rule to hooks, CI, or default linting. If the practice is already enforced, reject the duplicate. If structural enforcement is promising but cannot be made concrete from the available evidence, put it in Backlog with the next investigation step. Use skill prose for judgment that a rule cannot reliably check. See the **encode-lessons-in-structure** principle skill.
+Follow each approved row's routing:
 
-### 5. Apply
+- Trivial skill edit: the parent edits it.
+- Substantive edit, description tuning or new skill: use the host's skill-authoring workflow and its draft/test/iterate loop.
+- Lint rule/configuration: use the named codebase's setup and approved enforcement scope. Prove a violation fails, a valid case passes and the relevant lint command runs.
 
-Before applying any Accepted change, present the synthesizer's full Accepted/Rejected/Backlog output to the user and wait for explicit approval. The user picks which subset to apply and may redirect routings. Skill and lint changes can affect future work across the codebase. Do not auto-apply.
+Run the available skill validator on touched skills.
 
-Backlog items remain proposed until the user explicitly authorizes writing them to a tracker. Tracker submissions and skill edits are separate external actions.
+## 6. Report
 
-For each approved Accepted item, follow the Routing field exactly:
-
-- Trivial existing-skill edit (a one-line bullet, a tightened sentence, a stale fact corrected): parent does directly.
-- Substantive existing-skill edit (a new section, a new pattern table, more than ~10 lines): hand to the host's available skill-authoring workflow and run its draft, test, and iterate loop.
-- `tune description: <skill path>` (the skill exists but didn't trigger when it should have): hand to `create-skill` and run its description-optimization loop.
-- `new skill via create-skill: <kebab-name>`: hand creation to `create-skill`. Do not invent the shape ad hoc.
-- Lint rule or configuration: implement in the named codebase using its existing lint setup and the approved enforcement scope. Verify that a representative violation is caught, a valid case passes, and the relevant lint command runs.
-
-If your environment ships a SKILL.md validator, run it on every touched skill before declaring done. Skip this step if it doesn't.
-
-### 6. Summarize for the user
-
-Short list, no preamble:
-
-- Edits applied: `<skill path>`. What changed, one line each.
-- Lint rules applied: `<rule or config path>`. Practice enforced and scope, one line each.
-- New skills created: `<skill path>`. One line each (rare).
-- Backlog filed to the devex tracker: `<issue title>` (`<tags>`). One line each.
-- Dropped: one line per rejected finding + reason from the synthesizer.
+List applied skill/lint changes and their paths, new skills, authorized tracker items, and rejected findings with reasons. Keep proposed backlog distinct from filed items.

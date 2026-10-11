@@ -5,7 +5,7 @@ description: "Apply when writing, changing, reviewing, or auditing tests. Requir
 
 # Test behavior, not implementation
 
-A test calls the code the way its users do and asserts the result they observe against an independently expected value or observable effect. A test that only asserts internal call counts or restates an implementation constant may miss the behavior that matters.
+Call the code as its users do and assert an independently expected result or observable effect. Internal call counts and restated implementation constants may miss the behavior that matters.
 
 ## Before adding or keeping a test
 
@@ -24,7 +24,7 @@ Design the test around that defect:
 - Move repeated or involved setup into shared test helpers organized by purpose. Let helpers create the needed state and return useful handles; keep the action and expected behavior visible in the test. Do not add a helper for a trivial one-off fixture.
 - Spend assertions on what happens after the action. Do not repeatedly assert that fixtures contain the values the test just supplied. Check setup only when setup itself is under test or a failed prerequisite could make the behavior assertion pass for the wrong reason.
 
-**Why:** A test that cannot fail for a defect costs CI time and review attention and catches nothing. A constant pin can block a legitimate edit without showing whether the behavior broke.
+A test that cannot fail for a defect costs CI time and review attention. A constant pin can block a legitimate edit without showing whether behavior broke.
 
 ## Patterns to inspect
 
@@ -39,6 +39,6 @@ Design the test around that defect:
 
 These patterns flag candidates, not automatic deletions. Absence, call order, defaults, exact bytes, source inspection, and narrow unit behavior may be the independent contract. Keep meaningful negative, error, side-effect, property, public API, migration, security, and compile-time tests when each catches a distinct failure. Judge the complete test against its contract and defect.
 
-Call the subject with a concrete input and assert an independently expected result or observable effect, such as `expect(slugify("Hello, World!")).toBe("hello-world")`. For an absence, use a contrasting input to show the test distinguishes intended absence from a missing implementation. For a constant, test the mechanism that reads it when the value itself is not the contract. For a mock, assert a meaningful payload or resulting state. Delete a test only after checking its owner and overlap.
+Call the subject with a concrete input and assert its independently expected output or effect, such as `expect(slugify("Hello, World!")).toBe("hello-world")`. For absence, add a contrasting input that distinguishes it from missing behavior. For a mock, check the payload or resulting state. For a constant, test its reader when the value itself is not the contract. Check ownership and overlap before deleting.
 
 For a focused sweep of existing tests, read [the audit workflow](references/audit.md) before editing.
