@@ -52,6 +52,10 @@ Executor values have literal meanings:
 - `codex` runs the configured model through `codex exec`.
 - `claude` runs the configured model through `claude -p`.
 
+A host adapter may run an explicit `codex` or `claude` route through the
+host's own delegation when it runs the same model at the same reasoning level
+and keeps each worker visible to the user. The BillyBot adapter does this.
+
 Configuration must not become an arbitrary command or provider-flag escape
 hatch. `reasoning` is the only configurable provider control beyond model
 selection. The runtime owns its translation and the scoped permission controls
@@ -89,7 +93,8 @@ capability map for these operations:
   observability, error-tracking, and analytics tools.
 
 Read exactly one adapter under `references/adapters/` when the host is known.
-Read `generic.md` when it is not. Adapter files are examples of mappings, not
+A session that offers `run_subtask` or `delegate_task` is BillyBot: read
+`billybot.md`. Read `generic.md` when the host is not known. Adapter files are examples of mappings, not
 authority to use a capability the current session does not expose.
 
 When native delegation is unavailable for an `auto` route, execute serially
