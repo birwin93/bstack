@@ -19,6 +19,8 @@ ALLOWED_KEYS = {
     "license",
     "metadata",
     "allowed-tools",
+    # Pi and Claude Code hide a skill from the model's index until the user names it.
+    "disable-model-invocation",
 }
 FORBIDDEN = {
     "Cursor Task API": re.compile(r"\bTask\b"),

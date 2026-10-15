@@ -3,6 +3,7 @@ name: poteto-mode
 description: Route a non-trivial engineering task through Poteto Mode's rigorous playbooks, principles, delegation, review, and verification. Use when the user explicitly asks for poteto-mode, bstack, the full pstack-style workflow, or work in this style.
 metadata:
   compatibility: Uses bstack-runtime to adapt delegation, models, waiting, history, and connected tools to the current Agent Skills client.
+disable-model-invocation: true
 ---
 
 # Poteto mode
