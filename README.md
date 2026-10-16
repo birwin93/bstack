@@ -87,9 +87,14 @@ and explains decisions waiting on you. [Recall](skills/recall/SKILL.md) rebuilds
 context across your recent work on a topic; [bro](skills/bro/SKILL.md) rewrites
 only the last reply.
 
+[Grill me](skills/grill-me/SKILL.md) interviews you in rounds of numbered
+questions, each with a recommended answer, until a plan or design is settled.
+It runs only when explicitly invoked.
+
 ```text
 /poteto-help which skill should I use to review this branch?
 /ketchup
+/grill-me the canvas feature
 ```
 
 ## Development
