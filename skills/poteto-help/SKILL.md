@@ -19,6 +19,8 @@ Read the relevant local skill or guide before describing its behavior. Use the m
 | --- | --- |
 | Setup, models, reasoning, usage or agent limits | [setup-bstack](../setup-bstack/SKILL.md), [setup guide](../../docs/guide/01-setup.md) |
 | Start work or select a playbook | [poteto-mode](../poteto-mode/SKILL.md), [task prompts](../../docs/guide/02-poteto-mode.md) |
+| Check that the agent understood the goal and problem before work | [in-your-own-words](../in-your-own-words/SKILL.md) |
+| Rewrite a prompt deeper, not bigger, without doing the task | [sharpen](../sharpen/SKILL.md) |
 | Explain runtime behavior | [how](../how/SKILL.md) |
 | Explain design intent or history | [why](../why/SKILL.md) |
 | Teach a completed change | [teach](../teach/SKILL.md) |
@@ -35,6 +37,9 @@ Read the relevant local skill or guide before describing its behavior. Use the m
 | Vet performance evidence | [benchmark-checklist](../benchmark-checklist/SKILL.md) |
 | Request a failing test first | [tdd](../tdd/SKILL.md) |
 | Create or maintain a project verification harness | [create-verification-skill](../create-verification-skill/SKILL.md), [maintain-verification-skill](../maintain-verification-skill/SKILL.md) |
+| Formally verify a race, invariant or other case tests rarely reach | [create-formal-verification-skill](../create-formal-verification-skill/SKILL.md) |
+| Bring a formal check back in line after its covered code changed | [maintain-formal-verification-skill](../maintain-formal-verification-skill/SKILL.md) |
+| Show the owner of a behavior what the user sees, from a TLA+ model | [statechart](../statechart/SKILL.md) |
 | Capture a repeatable personal workflow | [automate-me](../automate-me/SKILL.md) |
 | Propose durable lessons | [reflect](../reflect/SKILL.md) |
 | Build an auditable plan for unfamiliar work | [figure-it-out](../figure-it-out/SKILL.md) |
@@ -60,6 +65,8 @@ When missing effective configuration matters to the user's question, offer setup
 Read [prompting](references/prompting.md) for goals, done conditions, proof, context and constraints. Read [recipes](references/recipes.md) for concrete starter prompts. If intent is unclear, ask one short question or suggest the likely next prompt with a stated assumption.
 
 Inspect existing project verification guidance before recommending a new harness. If none exists and the work needs real-flow proof, suggest **create-verification-skill**. Offer creation as a next prompt; do not create it from a guidance request.
+
+Check formal verification the same way. If the project has no formal verification skill and the question is about a race, an invariant or a case tests rarely reach, suggest **create-formal-verification-skill**. If one exists and the code it covers changed after its recorded sync commit, suggest **maintain-formal-verification-skill** when the question touches that code.
 
 Do not claim a persistent mode, scheduled wake-up or background run unless the current host supports it and the user has authorized that action. Hosts without persistent instructions can use an explicit `/poteto-mode` invocation at the start of each new task.
 

@@ -4,6 +4,8 @@ Adapt the repository, environment and proof to your task. Invoke **poteto-mode**
 
 | Goal | Prompt |
 | --- | --- |
+| Check the goal first | `/in-your-own-words` after a long or messy request, before any work starts. |
+| Deepen a prompt | `/sharpen write a migration guide for the v2 config format.` Read the rewrite, then send it. |
 | Understand behavior | `/how explain how checkout retries preserve the idempotency key. Read only.` |
 | Understand a decision | `/why why did we choose this timeout? Cite accessible records and label inference.` |
 | Read a finished change | `/teach this branch's diff and the tradeoffs that matter.` |
@@ -18,6 +20,8 @@ Adapt the repository, environment and proof to your task. Invoke **poteto-mode**
 | Verify performance | `/benchmark-checklist vet these before/after runs before recommending either implementation.` |
 | Build a harness | `/create-verification-skill add a seeded local flow that checks both rendered success and persisted data.` |
 | Refresh proof | `/maintain-verification-skill reconcile this repo's harness and feature map with the current app.` |
+| Prove a property | `/create-formal-verification-skill prove a job never runs twice at once in the lease module, even when retries overlap.` |
+| Refresh a formal check | `/maintain-formal-verification-skill bring the lease model back in line with the code merged since its sync commit.` |
 | Capture a workflow | `/automate-me turn this approved release workflow into a personal skill; include its proof and stop conditions.` |
 | Capture lessons | `/reflect propose durable lessons from this task and their strongest practical enforcement.` |
 | Prepare a PR | `/poteto-mode open a PR for the verified scoped change. Describe what changed, why and the proof. Leave merge and deployment for later.` |

@@ -82,8 +82,9 @@ prompting, design, verification and autonomous runs.
 
 [Poteto help](skills/poteto-help/SKILL.md) answers setup and workflow questions
 and gives you a prompt to send. It runs only when explicitly invoked. For a
-catch-up on this chat, [ketchup](skills/ketchup/SKILL.md) checks current status
-and explains decisions waiting on you. [Recall](skills/recall/SKILL.md) rebuilds
+catch-up on this chat, [ketchup](skills/ketchup/SKILL.md) tells you what changed
+since your last message, in plain words and small visuals, with every waiting
+decision listed. [Recall](skills/recall/SKILL.md) rebuilds
 context across your recent work on a topic; [bro](skills/bro/SKILL.md) rewrites
 only the last reply.
 
@@ -91,11 +92,31 @@ only the last reply.
 questions, each with a recommended answer, until a plan or design is settled.
 It runs only when explicitly invoked.
 
+Before a task, [in your own words](skills/in-your-own-words/SKILL.md) restates
+your goals and the problem so a misreading shows up before any edit.
+[Sharpen](skills/sharpen/SKILL.md) rewrites a prompt to be deeper, not bigger,
+and hands it back without doing the task. Both run only when explicitly invoked.
+
 ```text
 /poteto-help which skill should I use to review this branch?
 /ketchup
 /grill-me the canvas feature
+/sharpen write a migration guide for the v2 config format
 ```
+
+## Verify what tests rarely reach
+
+[Create-formal-verification-skill](skills/create-formal-verification-skill/SKILL.md)
+picks the property where a bug costs most and tests reach least, such as a race
+or a retry. It chooses the tool, with TLA+ as the default for ordering bugs,
+shows the check failing on a broken variant, and writes a project skill under
+`.agents/skills/` that reruns it.
+[Maintain-formal-verification-skill](skills/maintain-formal-verification-skill/SKILL.md)
+brings that check back in line after the covered code changes and says whether
+each failure is drift or a bug. [Statechart](skills/statechart/SKILL.md) draws
+what the user sees as a Mermaid chart from a TLA+ model, with each bug TLC finds
+as a numbered path. It needs Java and `tla2tools.jar`. All three run only when
+explicitly invoked.
 
 ## Development
 
