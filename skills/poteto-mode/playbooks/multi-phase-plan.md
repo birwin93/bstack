@@ -40,7 +40,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] `skills/poteto-mode/playbooks/opening-a-pr.md`
   - [ ] `skills/<each other leaf skill the program uses>`
 - [ ] Arm the hourly runtime audit through the runtime's schedule or wake capability. If unavailable, checkpoint durably and tell the operator that continuous monitoring is unavailable.
-- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from the current installed bstack root and the recorded objective. Audit both and fix drift. Probe every owner and child, inspect their decision and child trails, and judge durable progress. Apply Autopilot-full step 6 for stuck recovery and same-route retry limits. Expected runtime is evidence, not a kill deadline. Log the audit. Send a status message only for unreported changes under host and operator notification policy. Name new heads, rounds, verdicts, blockers, replacements, and decisions. Do not repeat unchanged tables unless periodic updates were requested."
+- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from the current installed bstack root and the recorded objective. Audit both and fix drift. Probe every owner and child, inspect their decision and child trails, and judge durable progress. Apply Autopilot-full step 6 for stuck recovery and same-route retry limits. Expected runtime is evidence, not a kill deadline. Log the audit. Send a status message that catches the operator up per ketchup only for unreported changes under host and operator notification policy. Name new heads, rounds, verdicts, blockers, replacements, and decisions. Do not repeat unchanged tables unless periodic updates were requested."
 - [ ] On the operator's hold or stand-down, send every owner and child a zero-writes order at once and cancel future scheduled work.
 
 ### Spawn owners
@@ -63,8 +63,8 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ### Verdict and merge, for every PR
 
-- [ ] At code-ready and every changed-patch round, run the swarm at the reported SHA per `skills/swarm/SKILL.md`. Include one gates lane, the ten live lanes, the relevant perf lane, and at least two focused audit lanes. Give each audit lane the full brief and a distinct focus. Audit final merge-ready or STACK-READY receipts before the verdict.
-- [ ] Clean only when every required lane is `PASS`. Send every proven issue, including notes, in one fix-forward. Require tests or repro receipts for defects at every affected site and carry them into the next review brief. Honor configured review-round limits.
+- [ ] A full swarm runs once, at the code-ready head. Another full swarm runs only for new behavior, a redesign, or a large new diff. A rebase, a merge-conflict resolution, or a minor fix gets a single fresh verifier at the new head. Run each full swarm at the reported SHA per `skills/swarm/SKILL.md`. Include one gates lane, the ten live lanes, the relevant perf lane, and at least two focused audit lanes. Give each audit lane the full brief and a distinct focus. Audit final merge-ready or STACK-READY receipts before the verdict.
+- [ ] Clean only when every required lane is `PASS`. Send every proven issue, including notes, in one fix-forward. A defect trunk shows without the PR is recorded against trunk and does not gate the PR. A new head gets a fresh verdict. Require tests or repro receipts for defects at every affected site and carry them into the next review brief. Honor configured review-round limits.
 - [ ] Apply `skills/poteto-mode/playbooks/shipping.md#verification-reuse` to verdict and lane reuse. Keep exact SHA, patch-id, build, configuration, and output evidence. CI and mergeability run fresh.
 - [ ] <The exact merge or append grant, operator gates, and done condition from the execution playbook.>
 
