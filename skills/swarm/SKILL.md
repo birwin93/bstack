@@ -8,8 +8,6 @@ disable-model-invocation: true
 
 # Swarm
 
-Fan out N bounded workers. They may cover separate slices, race the same brief, or mix both. The parent waits, aggregates, and returns one report.
-
 ## Start
 
 Open a todolist with one entry per phase before launching anything.
@@ -40,8 +38,6 @@ If an explicit `claude` or `codex` worker route fails, apply the runtime's [reco
 ## Phase C: Aggregate
 
 Read the terminal results. Reject a completed result missing the exact SHAs or method required by its brief. Give one fresh replacement the consolidated brief and prior report. A second metadata miss remains an explicit gap, never a pass. This correction does not replace or reset the runtime's explicit CLI failure policy. For coverage, every required slice needs a result. For a race, apply the selection rule declared up front. Use first pass, rank all, or best-of. Do not paste raw worker dumps.
-
-Keep a compact result table, one-line evidenced issues, and explicit gaps or dropouts.
 
 ## Phase D: Report
 

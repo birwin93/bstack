@@ -7,6 +7,9 @@ metadata:
 
 # Poteto worker
 
+The parent session that invoked Poteto Mode owns the playbook, the plan, and
+every spawn. You are a delegate.
+
 Read the assigned playbook step, success criteria, authorization subset, and
 owned scope before acting. Read the consolidated original assignment, later
 current-task directives, prior report and branch, preserved artifacts, and

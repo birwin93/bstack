@@ -59,9 +59,11 @@ and keeps each worker visible to the user. The BillyBot adapter does this.
 Configuration must not become an arbitrary command or provider-flag escape
 hatch. `reasoning` is the only configurable provider control beyond model
 selection. The runtime owns its translation and the scoped permission controls
-described in the executor reference. Never silently replace an explicit executor,
-model, or reasoning level with another one. If the host cannot run an explicit
-CLI route or apply an explicit reasoning level, follow the recovery rule below.
+described in the executor reference. Never silently replace an explicit executor
+or model with another one. Change an explicit reasoning level only through the
+per-job step in [Match reasoning to the job](#match-reasoning-to-the-job). If
+the host cannot run an explicit CLI route or apply an explicit reasoning level,
+follow the recovery rule below.
 
 Read [references/executors.md](references/executors.md) before starting an
 explicit CLI route. Start the fixed command through the host's process
@@ -116,12 +118,36 @@ bstack uses semantic roles rather than provider model slugs:
 For `auto` routes, map a configured role only to a model and reasoning level
 that the active host confirms are available together. Pass an explicit
 reasoning level through the host's native delegation control. For explicit CLI
-routes, use the provider model and reasoning level from configuration; the
-active host's catalog does not need to contain values owned by another CLI.
+routes, use the provider model from configuration and start from its
+configured reasoning level; the active host's catalog does not need to contain values owned by another CLI.
 Omit model and reasoning overrides when their configured value is `auto`. If
 the host or CLI rejects a configured model/reasoning combination, report the
 error without substitution. Never guess a model slug or reasoning value. Panel
 size determines reviewer count; repeated roles still count toward limits.
+
+### Match reasoning to the job
+
+The configured reasoning level is each role's starting point, not a fixed
+value. Before each spawn, start from the role's configured level, or from the
+inherited level when the route omits reasoning. Then adjust it for the job:
+
+- Raise it one step for the hardest or subtlest work, up to the highest level
+  the host confirms for that model.
+- Lower it one step for judgment-only work.
+- Lower it two or more steps for routine or mechanical work.
+
+Use a fast or priority speed mode only when the job is urgent, meaning CI or
+trunk is red or a person is blocked on the result right now. Otherwise use
+standard speed. Independent verification, meaning `critic` lanes and swarm
+verifier lanes, stays on its configured level and speed.
+
+Change only reasoning and speed. Never change the model or its family, so a
+diverse panel stays diverse. Use only levels the host or provider CLI confirms
+for that model, and never guess a value. A role on `auto` inherits the parent
+model and level and is not adjusted. If the host or CLI rejects the adjusted
+level, use the configured level and say so. Do not try another adjusted value.
+A rejected adjusted level is not an executor failure and does not count as a
+retry.
 
 ## Recover explicit executor failures
 

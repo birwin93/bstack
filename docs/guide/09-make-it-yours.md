@@ -8,6 +8,8 @@ Keep the environment, proof and publication boundaries explicit. Test it on a
 fresh realistic request before calling it ready.
 ```
 
+Two kinds of project skill have their own generators. A skill that drives your app to prove behavior comes from [create-verification-skill](../../skills/create-verification-skill/SKILL.md), and a skill that checks a property with a model checker, prover or other verifier comes from [create-formal-verification-skill](../../skills/create-formal-verification-skill/SKILL.md). Each has a maintain skill, and [verify and ship](06-verify-and-ship.md) covers both.
+
 Use the host's skill-authoring workflow to draft, exercise and iterate. Keep the entry point concise and move detailed references into linked files. Tune descriptions against realistic requests, including cases where the skill should stay inactive. Optional invocation-policy metadata can reinforce explicit-only behavior on hosts that support it.
 
 ## Turn evidence into durable lessons

@@ -64,7 +64,9 @@ The version 1 scalar form remains valid and normalizes to
 An explicit `codex` route always runs `codex exec`. An explicit `claude` route
 always runs `claude -p`. A version 2 route may omit `reasoning` or set it to
 `auto` to preserve inheritance/default behavior. Never silently substitute a
-different explicit executor, model, or reasoning level.
+different explicit executor or model. The configured reasoning level is each
+role's starting point; only the runtime's
+[per-job step](../bstack-runtime/SKILL.md#match-reasoning-to-the-job) moves it.
 
 The supported CLI commands are fixed. Do not write arbitrary commands or
 provider flags into configuration. `reasoning` is translated by the runtime to
@@ -97,7 +99,9 @@ already chose one:
 | Small | At most `medium`. |
 
 Recommend Small when the user prioritizes usage. Large, Medium and Small are
-reasoning ceilings; Highest supported is an explicit choice to raise effort.
+ceilings on the configured reasoning value; Highest supported is an explicit
+choice to raise it. A ceiling bounds each role's starting level, not every
+spawn.
 These choices are not token, spending or subscription caps. They do not
 change the parent chat's settings, scheduled jobs, or other tools' model choices.
 
@@ -123,7 +127,7 @@ for inherited roles only when the model and supported effort can be confirmed.
 For a newly configured explicit effort, use the chosen ceiling, or the
 confirmed maximum under Highest supported, unless the user chooses a lower
 supported effort. Keep current/default never restores
-an earlier higher effort. Raising reasoning requires an explicit user choice.
+an earlier higher effort. Raising a configured reasoning value requires an explicit user choice.
 
 Show the resulting role table, including executor, model, reasoning, inherited
 values, and unresolved choices. Show repository overrides that would mask a

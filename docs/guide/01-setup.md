@@ -29,7 +29,7 @@ A saved explicit model or effort stays explicit when host defaults change. Setup
 | Medium | Cap it at a supported value no higher than `high`. |
 | Small | Cap it at a supported value no higher than `medium`. |
 
-Ceilings preserve lower efforts. All presets preserve inherited efforts unless you explicitly choose one for that role. Catalogs may differ across providers; unavailable catalogs leave changed values unresolved. These are not spending, token or subscription caps and do not change the parent chat's settings.
+Configured effort is each role's starting point, and Poteto Mode may move it a step per job. Ceilings preserve lower efforts. All presets preserve inherited efforts unless you explicitly choose one for that role. Catalogs may differ across providers; unavailable catalogs leave changed values unresolved. These are not spending, token or subscription caps and do not change the parent chat's settings.
 
 For lower usage, start with Small and inspect the resulting table. If every role remains inherited, there may be no change to effort. Panel size and review rounds affect total agent calls. `max-parallel` controls concurrency, so lowering it alone does not establish lower total usage. Stronger roles can suit harder tasks; choose from measured needs rather than promising a universal cost saving.
 

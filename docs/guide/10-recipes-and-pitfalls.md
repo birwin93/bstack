@@ -4,6 +4,8 @@ Use these starters with your actual repository and environment. Each prompt says
 
 | Task | Starter |
 | --- | --- |
+| Check the goal first | `/in-your-own-words` |
+| Deepen a prompt | `/sharpen write a migration guide for the v2 config format.` |
 | Understand before editing | `/how explain this flow and its state transitions. Read only.` |
 | Recover context | `/recall the refund work, then identify missing history before interpreting this report.` |
 | Catch up | `/ketchup` |
@@ -15,6 +17,8 @@ Use these starters with your actual repository and environment. Each prompt says
 | Prototype an interaction | `/poteto-mode prototype this with fixture data and show the interaction before production planning.` |
 | Audit performance | `/benchmark-checklist vet these trials, including limiter, errors and completed work, before selecting a winner.` |
 | Build proof | `/create-verification-skill add a seeded local flow that checks rendered success and stored state.` |
+| Prove a property | `/create-formal-verification-skill the job lease and retry logic. A job must never run twice at once.` |
+| Show behavior to its owner | `/statechart what the user sees when they edit a note offline.` |
 | Prepare a PR | `/poteto-mode open a PR for this verified change. Explain what changed, why and the proof.` |
 | Capture lessons | `/reflect propose the durable lessons and strongest practical enforcement from this task.` |
 | Choose a route | `/poteto-help which skill fits this task, and what should I send?` |
