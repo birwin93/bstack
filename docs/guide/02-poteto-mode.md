@@ -18,6 +18,8 @@ success and one persisted order. Keep the public API. Restate before editing.
 
 A short narrow task needs less ceremony. For ambiguous work, restating catches the wrong target before edits. For an unfamiliar design, request a tutorial or experiment, then use [design](04-design.md) before planning production work.
 
+Two small skills help before a task starts. [In your own words](../../skills/in-your-own-words/SKILL.md) restates your goals and the problem, with no playbook and no edits. [Sharpen](../../skills/sharpen/SKILL.md) rewrites a prompt to be deeper, not bigger. It names what a top professional would add, the rawest material, the methods and tools, and an outside check, then hands back the prompt and leaves your choices open. It does not do the task. Both run only when you invoke them by name.
+
 ## Steer the active work
 
 Follow-ups such as "use the existing helper," "prove the persisted value," and "keep the API" constrain the current objective. Say explicitly when starting a different task. Use [ketchup](../../skills/ketchup/SKILL.md) for progress since your previous human message, including decisions still waiting on you.

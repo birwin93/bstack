@@ -9,7 +9,7 @@ bstack connects engineering playbooks, specialist skills and reusable principles
 | [3. Understand](03-understand.md) | Investigate behavior, rationale and recent context before editing. |
 | [4. Design](04-design.md) | Explore alternatives, prototype and select boundaries before planning. |
 | [5. Build and clean](05-build-and-clean.md) | Fix, implement, refactor and measure with concrete evidence. |
-| [6. Verify and ship](06-verify-and-ship.md) | Build real-flow proof and carry authorized work through publication. |
+| [6. Verify and ship](06-verify-and-ship.md) | Build real-flow proof, formally verify what tests rarely reach and carry authorized work through publication. |
 | [7. Autonomous runs](07-overnight.md) | Set a trusted finish condition, authority and recovery boundaries. |
 | [8. Principles](08-principles.md) | Apply reusable rules at the decision they protect. |
 | [9. Make it yours](09-make-it-yours.md) | Capture workflows and lessons with explicit scope. |
