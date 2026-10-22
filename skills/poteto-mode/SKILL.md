@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 # Poteto mode
 
+Bundled skills resolve at `../<name>/SKILL.md` from this file. Every worker brief includes the absolute path to `poteto-worker/SKILL.md` and to each leaf principle skill the worker needs.
+
 ## Non-negotiables
 
 The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Cite only principles whose leaf SKILL.md you read this session.
@@ -46,7 +48,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 - **Laziness Protocol.** Refactoring, sizing a diff, or tempted to add abstractions, layers, or signal threading. Bias to deletion and the smallest change that solves the problem.
 - **Foundational Thinking.** Before writing logic: core types and data structures, scaffold-vs-feature sequencing, what concurrent actors share.
 - **Redesign from First Principles.** Integrating a new requirement into an existing design. Redesign as if it had been foundational from day one.
-- **Attack the Premise.** Two or more fixes that share one premise have failed the same gate. Take a census of which actors hold the imbalance before the next fix, then question the premise instead of writing another fix that assumes it.
+- **Attack the Premise.** Two or more fixes that share one premise have failed the same gate. Write the premise down and test it directly before you write another fix that assumes it.
 - **Subtract Before You Add.** Sequencing an addition, refactor, or rewrite. Remove dead weight first, then build on the simpler base.
 - **Minimize Reader Load.** Reviewing or shaping code that's hard to trace. Count layers and hidden state, collapse one-caller wrappers, shrink mutable scope.
 - **Outcome-Oriented Execution.** Planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture, don't preserve throwaway compatibility states.
@@ -66,9 +68,9 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 **Verification**
 
 - **Prove It Works.** After a task, before declaring done. Verify against the real artifact, not a proxy or "it compiles".
-- **Fix Root Causes.** Debugging. Trace each symptom to its root cause, reproduce first, ask why until you reach it.
+- **Fix Root Causes.** Debugging. Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate.
 - **Sequence Work into Verifiable Units** (**principle-sequence-verifiable-units**). Multi-step work (sweeps, migrations, runs of similar edits) and how you stack commits and PRs. Break work into small units that each end in a check, verify each before the next, and order delivery so the sequence proves itself.
-- **Test Behavior, Not Implementation.** Writing, changing, reviewing, or auditing tests. Require a distinct contract, a plausible defect, and an owning boundary before adding or keeping coverage. Use its audit workflow for focused cleanup.
+- **Test Behavior, Not Implementation.** Writing, changing, reviewing, or auditing tests. Assert what the code's users can observe, so the test fails when that behavior breaks and keeps passing when only the internals change. Use its audit workflow for focused cleanup.
 - **Explain the Number.** Before trusting, reporting, or acting on a measured number. Find what limits it and rule out measuring different work.
 
 **Delegation**
@@ -92,9 +94,13 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Subagents
 
+The session that invokes Poteto Mode runs the playbook. Never delegate the playbook itself to a worker.
+
 Use the delegation capability resolved by **bstack-runtime**. Every code-writing or ad-hoc worker receives the **poteto-worker** contract, the matched playbook step, owned scope, success criteria, and its authorization subset. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) may define narrower read-only worker contracts.
 
 Model roles come from **bstack-runtime**. Use `fast-code` for narrow mechanical work, `deep-code` for precisely specified difficult work, `judgment` for architecture and synthesis, and `critic` for independent review. `auto` inherits the parent model. Never place a provider model slug in a shared playbook.
+
+**Match the model to the job.** The configured reasoning level is the starting point, not a fixed value. Before each spawn, apply the runtime's [per-job step](../bstack-runtime/SKILL.md#match-reasoning-to-the-job). Raise reasoning one step for the hardest or subtlest work. Lower it one step for judgment-only work and two or more steps for routine or mechanical work. Use a fast or priority speed mode only when CI or trunk is red or a person is blocked right now. Independent verification stays on its configured level and speed. Change only effort and speed, never the model or family, so a diverse panel stays diverse.
 
 Start a fresh worker for each new task, fix round, retry, follow-up, or queue item. Each brief consolidates the original assignment, every later directive from the current task, and the prior report and branch. Include preserved artifacts, remaining work, and the retry count. Read only current-task history through the runtime; name unavailable history instead of inventing it.
 
