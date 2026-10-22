@@ -52,7 +52,8 @@ built-in capability is available. Tool availability never grants authority.
 
 **Stacks.** Use Graphite or another stack tool only when the repository already
 uses it and the user requested or accepted stacked delivery. Verify parentage
-before submitting. Otherwise use the repository's normal branch workflow.
+before submitting. Otherwise use the repository's normal branch workflow. When a
+parent merges, move its child onto trunk per [Shipping](shipping.md) step 6.
 
 **Readiness.** Open ready for review unless the user asks for a draft or the
 repository requires drafts. Re-read the created pull request and verify its
