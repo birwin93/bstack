@@ -14,9 +14,9 @@ trail. Report PR state separately from merge, deployment and live-flow proof.
 | Shape | Use |
 | --- | --- |
 | [Autonomous run](../../skills/poteto-mode/playbooks/autonomous-run.md) | One scoped outcome with an observable finish condition. |
-| [Orchestrate](../../skills/poteto-mode/playbooks/orchestrate.md) | Coordinate task dependencies and owned outputs. |
+| [Orchestrate](../../skills/poteto-mode/playbooks/orchestrate.md) | Run a standing program: decide which agent does each piece of work, then check what each produces. |
 | [Autopilot-full](../../skills/poteto-mode/playbooks/autopilot-full.md) | Carry an explicitly authorized full workflow through its assigned gates. |
-| [Autopilot-stack](../../skills/poteto-mode/playbooks/autopilot-stack.md) | Coordinate accepted stacked delivery and its dependent branches. |
+| [Autopilot-stack](../../skills/poteto-mode/playbooks/autopilot-stack.md) | Autopilot-full without the merge. Hand verified PRs to the operator to land. |
 
 The host may lack delegation or persistent background execution. Apply the documented serial fallback when available and disclose unsupported capabilities. Scheduling a wake-up or recurring check requires a supported scheduler and an explicit request. Invoking an autonomous playbook does not create a schedule.
 

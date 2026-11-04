@@ -63,7 +63,7 @@ head SHA, base, title, body, and state before reporting success.
 or deployment. Return the URL to the parent and continue the assigned work.
 An Autopilot-full or Autopilot-stack owner whose brief explicitly assigns the
 babysit loop starts that loop after its code-ready report. It reports merge-ready
-or STACK-READY under that playbook. Ordinary PR work still waits for a monitoring
+under that playbook. Ordinary PR work still waits for a monitoring
 request. Reused verification follows [Shipping's rule](shipping.md#verification-reuse);
 opening or updating a PR does not make old evidence current.
 

@@ -11,9 +11,10 @@ Adapt the repository, environment and proof to your task. Invoke **poteto-mode**
 | Read a finished change | `/teach this branch's diff and the tradeoffs that matter.` |
 | Rebuild topic context | `/recall the checkout retry work; say which history is unavailable.` |
 | Catch up | `/ketchup` |
+| Catch up as a video | `/ketchup-video` |
 | Design before editing | `/architect design the retry state and public signatures; stop at the design checkpoint.` |
 | Compare designs | `/arena compare three designs for this queue. Return the selected artifact and tradeoffs.` |
-| Challenge a diff | `/interrogate this branch against main; report findings before applying any.` |
+| Challenge a diff | `/interrogate this branch against main; report verified findings before applying any.` Read the Dropped list too. |
 | Check consumers | `/blast-radius this response shape change; inspect affected callers.` |
 | Fix a bug | `/poteto-mode reproduce this retry failure locally, fix the root cause and prove the corrected flow.` |
 | Prototype | `/poteto-mode prototype this navigation with fixture data, then show the interaction before planning production work.` |

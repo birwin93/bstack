@@ -39,6 +39,8 @@ Reject duplicate enforcement. Put promising but unproven mechanisms in Backlog w
 
 Present the full Accepted / Rejected / Backlog output before applying edits. The user chooses the subset and routing. Do not auto-apply. File backlog items only with explicit tracker-write authorization.
 
+Never edit an installed copy of a skill, such as a plugin cache or a skill linked into a shared checkout that other agents load. Edit the skill in a repository worktree, or copy it to the project's or user's skill folder and edit the copy. Show that destination before approval. Never push or open a pull request.
+
 Follow each approved row's routing:
 
 - Trivial skill edit: the parent edits it.
