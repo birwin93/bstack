@@ -37,7 +37,9 @@ Map these semantic roles:
 - `fast-code` for narrow mechanical work.
 - `deep-code` for difficult precise implementation.
 - `judgment` for architecture and synthesis.
-- `critic` for independent review.
+- `critic` for independent review. Arena's judge never runs on the parent's
+  model family, and an `auto` route inherits the parent. Route `critic` to a
+  model from another family when you want Arena to keep its judge.
 
 Read existing configuration before proposing changes. Compare keys under
 `models` with these supported roles. Report unsupported keys with their source
