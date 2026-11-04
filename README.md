@@ -65,7 +65,8 @@ to each independent change. Root verification starts at the code-ready head,
 then repeats when a fix changes the patch. A clean verdict applies only to the
 verified patch. Merge-ready also requires the playbook's review and CI gates
 and explicit merge authority. [Autopilot-stack](skills/poteto-mode/playbooks/autopilot-stack.md)
-uses verification rounds for a linear stack that the operator lands.
+is Autopilot-full without the merge. It stops at verified PRs for the operator
+to land, and stacks a PR only on a PR it builds on.
 
 Both workflows retain the runtime's model roles, panel and review-round limits,
 and authorization rules. Unavailable native delegation uses the supported
@@ -84,7 +85,8 @@ prompting, design, verification and autonomous runs.
 and gives you a prompt to send. It runs only when explicitly invoked. For a
 catch-up on this chat, [ketchup](skills/ketchup/SKILL.md) tells you what changed
 since your last message, in plain words and small visuals, with every waiting
-decision listed. [Recall](skills/recall/SKILL.md) rebuilds
+decision listed. [Ketchup video](skills/ketchup-video/SKILL.md) gives the
+same catch-up as a short subtitled video of slides. [Recall](skills/recall/SKILL.md) rebuilds
 context across your recent work on a topic; [bro](skills/bro/SKILL.md) rewrites
 only the last reply.
 

@@ -9,9 +9,9 @@ Use [architect](../../skills/architect/SKILL.md) to inspect the domain and sketc
 error handling and the simplest caller. Stop at the design checkpoint.
 ```
 
-Use [arena](../../skills/arena/SKILL.md) when several plausible designs need comparison. Independent candidates work from shared grounding into separate outputs; the picker uses a task-specific rubric. Use [swarm](../../skills/swarm/SKILL.md) for independent subtasks whose results should be combined. These serve different needs; additional agents are useful only when the task benefits from their work.
+Use [arena](../../skills/arena/SKILL.md) when several plausible designs need comparison. Independent candidates work from shared grounding into separate outputs; the picker uses a task-specific rubric. A read-only judge from a different model family scores them too. When no model from another family can run, the picker skips the judge and says so. Use [swarm](../../skills/swarm/SKILL.md) for independent subtasks whose results should be combined. These serve different needs; additional agents are useful only when the task benefits from their work.
 
-Use [interrogate](../../skills/interrogate/SKILL.md) to challenge a design or diff. It reports a lead judgment and does not auto-apply findings. Use [blast-radius](../../skills/blast-radius/SKILL.md) to identify affected callers and consumers before a boundary changes.
+Use [interrogate](../../skills/interrogate/SKILL.md) to challenge a design or diff. Adversaries try to break it with runs against the real code. A finding survives only when rerunning its command shows a failure that breaks the intent. The report lists what each adversary dropped and why, and applies nothing. Use [blast-radius](../../skills/blast-radius/SKILL.md) to identify affected callers and consumers before a boundary changes.
 
 ## Try the uncertain part
 

@@ -26,11 +26,12 @@ Read the relevant local skill or guide before describing its behavior. Use the m
 | Teach a completed change | [teach](../teach/SKILL.md) |
 | Rebuild recent context on a topic | [recall](../recall/SKILL.md) |
 | Catch up in this chat | [ketchup](../ketchup/SKILL.md) |
+| Catch up in this chat as a short subtitled video | [ketchup-video](../ketchup-video/SKILL.md) |
 | Simplify the last reply | [bro](../bro/SKILL.md) |
 | Design types and boundaries before implementation | [architect](../architect/SKILL.md) |
 | Compare independent candidate designs | [arena](../arena/SKILL.md) |
 | Split independent work | [swarm](../swarm/SKILL.md) |
-| Challenge a design or diff | [interrogate](../interrogate/SKILL.md) |
+| Challenge a design or diff, keeping only findings a run proves | [interrogate](../interrogate/SKILL.md) |
 | Inspect affected consumers | [blast-radius](../blast-radius/SKILL.md) |
 | Audit comments | [comment-sicko](../comment-sicko/SKILL.md) |
 | Clean up accepted comment findings | [no-comments](../no-comments/SKILL.md) |

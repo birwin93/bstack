@@ -9,9 +9,10 @@ Use these starters with your actual repository and environment. Each prompt says
 | Understand before editing | `/how explain this flow and its state transitions. Read only.` |
 | Recover context | `/recall the refund work, then identify missing history before interpreting this report.` |
 | Catch up | `/ketchup` |
+| Catch up as a video | `/ketchup-video` |
 | Design | `/architect sketch the domain types and simplest caller. Stop at the checkpoint.` |
 | Compare designs | `/arena compare three designs using this goal and constraints.` |
-| Challenge work | `/interrogate this diff against main. Report actionable findings before edits.` |
+| Challenge work | `/interrogate this diff against main. Report verified findings before edits.` |
 | Fix a bug | `/poteto-mode reproduce this seeded failure, fix the root cause and prove the real path.` |
 | Learn an unfamiliar tool | `/poteto-mode explain the relevant model, run one bounded experiment, then design the integration.` |
 | Prototype an interaction | `/poteto-mode prototype this with fixture data and show the interaction before production planning.` |

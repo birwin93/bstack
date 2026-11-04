@@ -9,6 +9,7 @@ An investigation can end with an answer. It does not imply implementation author
 | How should I read this finished change? | [teach](../../skills/teach/SKILL.md) |
 | What recent context exists on this topic? | [recall](../../skills/recall/SKILL.md) |
 | What happened in this chat while I was away? | [ketchup](../../skills/ketchup/SKILL.md) |
+| Show me what happened as a short video | [ketchup-video](../../skills/ketchup-video/SKILL.md) |
 | Can you simplify the last reply? | [bro](../../skills/bro/SKILL.md) |
 
 ```text
