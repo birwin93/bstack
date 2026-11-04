@@ -40,7 +40,7 @@ Read the relevant local skill or guide before describing its behavior. Use the m
 | Create or maintain a project verification harness | [create-verification-skill](../create-verification-skill/SKILL.md), [maintain-verification-skill](../maintain-verification-skill/SKILL.md) |
 | Formally verify a race, invariant or other case tests rarely reach | [create-formal-verification-skill](../create-formal-verification-skill/SKILL.md) |
 | Bring a formal check back in line after its covered code changed | [maintain-formal-verification-skill](../maintain-formal-verification-skill/SKILL.md) |
-| Show the owner of a behavior what the user sees, from a TLA+ model | [statechart](../statechart/SKILL.md) |
+| Check a TLA+ model and show its owner the shortest path to each broken rule | [statechart](../statechart/SKILL.md) |
 | Capture a repeatable personal workflow | [automate-me](../automate-me/SKILL.md) |
 | Propose durable lessons | [reflect](../reflect/SKILL.md) |
 | Build an auditable plan for unfamiliar work | [figure-it-out](../figure-it-out/SKILL.md) |
