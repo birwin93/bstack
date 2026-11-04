@@ -27,7 +27,7 @@ If an explicit `claude` or `codex` candidate or judge route fails, apply the run
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, start one read-only judge through the runtime. The judge never runs on the parent's model family. Use the `critic` role when it resolves to a model from another family. Otherwise try `judgment`, `deep-code`, and `fast-code` in that order, and use the first that resolves to another family. An `auto` route inherits the parent model, so it never judges. If no role resolves to another family, skip the judge, pick the base alone in Phase D, and say so. If you cannot tell the parent's family, use `critic` and say that the family check did not run. It sees the rubric and candidates by path label, scores each criterion, and recommends a base with rationale. Run it in parallel with the parent's reading in Phase D when available, but never while candidates are still writing.
+After all Phase B candidates complete, start one read-only judge through the runtime. The judge never runs on the parent's model family. Use the `critic` role when it resolves to a model from another family. Otherwise try `judgment`, `deep-code`, and `fast-code` in that order, and use the first that resolves to another family. An `auto` route inherits the parent model, so it never judges. If no role resolves to another family, skip the judge, pick the base alone in Phase D, and say so. If you cannot tell the parent's family, use `critic` and say that the family check did not run. The judge sees the rubric and candidates by path label, scores each criterion, and recommends a base with rationale. Run it in parallel with the parent's reading in Phase D when available, but never while candidates are still writing.
 
 ## Phase D: Pick a base
 
