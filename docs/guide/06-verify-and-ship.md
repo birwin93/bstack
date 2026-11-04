@@ -16,7 +16,7 @@ Some bugs live on paths nobody drives, such as two overlapping retries or a lock
 
 After merges or refactors that skipped the check, run [maintain-formal-verification-skill](../../skills/maintain-formal-verification-skill/SKILL.md). It updates the verification from the code, reruns it, proves each updated check can still fail, and labels each failure as drift in the verification or a bug in the code.
 
-[Statechart](../../skills/statechart/SKILL.md) shows a TLA+ model to the person who owns the behavior. It draws what the user sees as a Mermaid chart, marks each state works, still wrong or fixed, and numbers each bug path TLC finds. It can also turn an agreed chart into a TLA+ skeleton. It needs Java and `tla2tools.jar`, and `mmdc` for PNGs. All three skills run only when invoked by name.
+[Statechart](../../skills/statechart/SKILL.md) checks a TLA+ model, draws what the user sees as a Mermaid statechart, marks each state that breaks a rule, and gives the shortest path to each one. It needs Java and `tla2tools.jar`, and Pele to render charts. All three skills run only when invoked by name.
 
 ## Explain measurements
 

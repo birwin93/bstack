@@ -113,10 +113,10 @@ shows the check failing on a broken variant, and writes a project skill under
 `.agents/skills/` that reruns it.
 [Maintain-formal-verification-skill](skills/maintain-formal-verification-skill/SKILL.md)
 brings that check back in line after the covered code changes and says whether
-each failure is drift or a bug. [Statechart](skills/statechart/SKILL.md) draws
-what the user sees as a Mermaid chart from a TLA+ model, with each bug TLC finds
-as a numbered path. It needs Java and `tla2tools.jar`. All three run only when
-explicitly invoked.
+each failure is drift or a bug. [Statechart](skills/statechart/SKILL.md) checks
+a TLA+ model, draws what the user sees as a Mermaid statechart, marks each state
+that breaks a rule, and gives the shortest path to each one. It needs Java and
+`tla2tools.jar`. All three run only when explicitly invoked.
 
 ## Development
 
